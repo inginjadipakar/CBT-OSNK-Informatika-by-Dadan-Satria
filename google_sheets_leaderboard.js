@@ -20,12 +20,25 @@ function doGet(e) {
   var data = sheet.getDataRange().getValues();
   var leaderboard = [];
 
-  // Jika sheet belum ada isinya, buat header
+  var DEFAULT_LIST = [
+    { rank: 1, name: "Ahmad Fauzi", className: "XI MIPA 1 / MA Amanatul Ummah", round1: 84.0, round2: 8.0, totalScore: 92.0, violations: 0, time: "16:15" },
+    { rank: 2, name: "Muhammad Zikri", className: "XI MIPA 2 / MA Amanatul Ummah", round1: 78.0, round2: 10.0, totalScore: 88.0, violations: 0, time: "16:22" },
+    { rank: 3, name: "Nabila Putri Kirana", className: "X-A / MA Amanatul Ummah", round1: 74.0, round2: 11.0, totalScore: 85.0, violations: 0, time: "16:05" },
+    { rank: 4, name: "Rizky Dwi Pratama", className: "XI MIPA 1 / MA Amanatul Ummah", round1: 72.0, round2: 8.0, totalScore: 80.0, violations: 1, time: "16:30" },
+    { rank: 5, name: "Fathir Ar-Rasyid", className: "XI MIPA 3 / MA Amanatul Ummah", round1: 68.0, round2: 10.0, totalScore: 78.0, violations: 0, time: "15:50" },
+    { rank: 6, name: "Aisyah Nur Salsabila", className: "X-B / MA Amanatul Ummah", round1: 66.0, round2: 9.0, totalScore: 75.0, violations: 0, time: "16:18" },
+    { rank: 7, name: "Bagus Setiawan", className: "XI MIPA 2 / MA Amanatul Ummah", round1: 62.0, round2: 11.0, totalScore: 73.0, violations: 0, time: "16:35" },
+    { rank: 8, name: "Siti Rahmawati", className: "X-C / MA Amanatul Ummah", round1: 60.0, round2: 8.0, totalScore: 68.0, violations: 0, time: "16:40" },
+    { rank: 9, name: "Dimas Arya Nugraha", className: "XI MIPA 1 / MA Amanatul Ummah", round1: 58.0, round2: 7.0, totalScore: 65.0, violations: 1, time: "15:45" },
+    { rank: 10, name: "Hafiz Al-Ghifari", className: "XI MIPA 3 / MA Amanatul Ummah", round1: 54.0, round2: 9.0, totalScore: 63.0, violations: 0, time: "16:25" }
+  ];
+
+  // Jika sheet belum ada isinya, kembalikan data awal simulasi
   if (data.length <= 1 && (!data[0] || !data[0][1])) {
     return ContentService.createTextOutput(JSON.stringify({
       success: true,
-      totalParticipants: 0,
-      leaderboard: []
+      totalParticipants: DEFAULT_LIST.length,
+      leaderboard: DEFAULT_LIST
     })).setMimeType(ContentService.MimeType.JSON);
   }
 
