@@ -7,13 +7,31 @@ const LeaderboardManager = {
 
   STORAGE_KEY: "osnk_cbt_leaderboard_real_v2",
 
-  // Ambil data leaderboard dari serverless /api/leaderboard atau local storage
+  // Ambil data leaderboard dari Google Sheets, Serverless /api/leaderboard, atau local storage
   async getLeaderboard() {
+    // 1. Coba fetch dari Google Sheets jika diatur (sinkronisasi multi-device paling mudah)
+    if (APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL) {
+      try {
+        const sheetRes = await fetch(APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL, { method: "GET" });
+        if (sheetRes.ok) {
+          const sheetJson = await sheetRes.json();
+          if (sheetJson && Array.isArray(sheetJson.leaderboard)) {
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sheetJson.leaderboard));
+            return sheetJson.leaderboard;
+          }
+        }
+      } catch (sheetErr) {
+        console.warn("Sinkronisasi Google Sheets gagal, mencoba endpoint serverless:", sheetErr.message);
+      }
+    }
+
+    // 2. Coba fetch dari API Serverless /api/leaderboard
     try {
       const res = await fetch(APP_CONFIG.API_URL, { method: "GET" });
       if (res.ok) {
         const json = await res.json();
-        if (json && Array.isArray(json.leaderboard)) {
+        if (json && Array.isArray(json.leaderboard) && json.leaderboard.length > 0) {
+          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(json.leaderboard));
           return json.leaderboard;
         }
       }
@@ -21,7 +39,7 @@ const LeaderboardManager = {
       console.warn("Menggunakan penyimpanan lokal untuk leaderboard:", e.message);
     }
 
-    // Fallback ke localStorage
+    // 3. Fallback ke localStorage di perangkat ini
     const local = localStorage.getItem(this.STORAGE_KEY);
     if (local) {
       try {
@@ -37,7 +55,36 @@ const LeaderboardManager = {
   async submitScore(entry) {
     let savedList = await this.getLeaderboard();
 
-    // POST ke API Serverless jika tersedia
+    // 1. POST ke Google Sheets jika URL diisi
+    if (APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL) {
+      try {
+        const sheetRes = await fetch(APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(entry)
+        });
+        if (sheetRes.ok) {
+          try {
+            const sheetJson = await sheetRes.json();
+            if (sheetJson && Array.isArray(sheetJson.leaderboard)) {
+              savedList = sheetJson.leaderboard;
+            }
+          } catch (e) {}
+        }
+      } catch (sheetErr) {
+        // Fallback kirim no-cors jika browser memblokir preflight
+        try {
+          fetch(APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(entry)
+          });
+        } catch (e) {}
+      }
+    }
+
+    // 2. POST ke API Serverless jika tersedia
     try {
       const res = await fetch(APP_CONFIG.API_URL, {
         method: "POST",
@@ -54,7 +101,7 @@ const LeaderboardManager = {
       console.warn("Gagal POST ke API, menyimpan secara lokal:", err.message);
     }
 
-    // Pastikan data peserta masuk ke list (update jika sudah ada atau push jika baru)
+    // 3. Pastikan data peserta masuk ke list (update jika sudah ada atau push jika baru)
     const existingIndex = savedList.findIndex(item => 
       item.name && item.name.toLowerCase().trim() === entry.name.toLowerCase().trim() &&
       item.className && item.className.toLowerCase().trim() === entry.className.toLowerCase().trim()
@@ -82,20 +129,6 @@ const LeaderboardManager = {
 
     // Simpan ke localStorage
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(ranked));
-
-    // Kirim juga ke Google Sheets jika URL diisi
-    if (APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL) {
-      try {
-        fetch(APP_CONFIG.GOOGLE_SHEETS_WEBHOOK_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(entry)
-        });
-      } catch (sheetErr) {
-        console.warn("Gagal sync ke Google Sheets:", sheetErr);
-      }
-    }
 
     return ranked;
   },
