@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBT OSNK Informatika - Simulasi C++ & Leaderboard</title>
+  <meta name="description" content="Platform CBT Simulasi OSNK Informatika C++ dengan Penguncian Materi 15 Menit, Kesempatan Kedua (50% Skor), Anti-Cheat, dan Leaderboard.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="no-copy">
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon">&lt;/&gt;</div>
+        <div class="brand-text">
+          <h1>OSNK CBT INFORMATIKA</h1>
+          <p>Simulasi C++ &bull; 50 Soal &bull; 3 Menit/Soal &bull; <span style="color:var(--accent-secondary);font-style:italic;">by Dadan Satria</span></p>
+        </div>
+      </div>
+
+      <div class="nav-profile">
+        <div id="user-profile-badge" class="profile-chip hidden">
+          <span class="user-avatar" id="header-avatar-initial">S</span>
+          <span id="header-user-name">Siswa</span>
+          <span class="badge-tag" id="header-user-class">Kelas</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+
+    <!-- ====================================================================
+         SCREEN 1: REGISTRASI & IDENTITAS SISWA
+         ==================================================================== -->
+    <section id="screen-registration" class="screen active">
+      <div class="reg-container glass-panel">
+        <div class="reg-header">
+          <span class="reg-badge">Sistem Ujian Internal</span>
+          <h2>Simulasi Ujian OSNK Informatika</h2>
+          <p>Masukkan identitas Anda untuk memulai sesi membaca materi dan ujian C++.</p>
+        </div>
+
+        <div class="reg-rules">
+          <h4>📌 Regulasi & Alur Pelaksanaan Ujian</h4>
+          <ul>
+            <li><strong>Fase 1 (15 Menit):</strong> Membaca modul ringkasan materi C++. Setelah 15 menit, materi akan <em>dikunci permanen</em> dan dihapus.</li>
+            <li><strong>Fase 2 (Ronde 1):</strong> 50 butir soal pilihan ganda (A-E) berbasis silabus resmi OSNK.</li>
+            <li><strong>Durasi Soal:</strong> Tiap butir soal memiliki batas waktu <strong>3 menit</strong>.</li>
+            <li><strong>Mekanisme Kesempatan Kedua (Ronde 2):</strong> Soal yang dijawab salah di Ronde 1 akan diulang kembali dengan bobot nilai <strong>50%</strong> (1.0 poin per soal benar).</li>
+            <li><strong>Sistem Nilai:</strong> Nilai maksimal benar semua adalah <strong>100</strong>.</li>
+            <li><strong>Integritas Akademik (Anti-Cheat):</strong> Dilarang berpindah tab atau meminimalkan browser. Dilarang copy-paste. Pelanggaran 3 kali akan memicu <em>auto-submit</em> otomatis.</li>
+          </ul>
+        </div>
+
+        <form id="form-registration" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="input-name">Nama Lengkap Siswa</label>
+            <input type="text" id="input-name" class="form-input" placeholder="Contoh: Muhammad Farel" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-class">Kelas / Asal Sekolah</label>
+            <input type="text" id="input-class" class="form-input" placeholder="Contoh: XI MIPA 1 / MA Amanatul Ummah" required autocomplete="off">
+          </div>
+
+          <button type="button" id="btn-start-registration" class="btn-primary">
+            Masuk & Mulai Sesi Membaca Materi (15 Menit) &rarr;
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 2: MEMBACA MATERI C++ (TIMER 15 MENIT)
+         ==================================================================== -->
+    <section id="screen-reading" class="screen">
+      <div class="materi-topbar">
+        <div class="timer-box">
+          <div class="timer-icon">⏳</div>
+          <div class="timer-info">
+            <div class="timer-label">Sisa Waktu Membaca Materi</div>
+            <div id="reading-timer-text" class="timer-text">15:00</div>
+          </div>
+        </div>
+
+        <div style="flex: 1; max-width: 320px;">
+          <div class="progress-bar-container">
+            <div id="reading-progress-bar" class="progress-bar"></div>
+          </div>
+          <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px; text-align: right;">
+            Materi dikunci otomatis saat waktu habis
+          </div>
+        </div>
+
+        <button type="button" id="btn-finish-reading" class="btn-action-start">
+          Selesai Membaca & Mulai Ujian Sekarang &rarr;
+        </button>
+      </div>
+
+      <div class="materi-layout">
+        <!-- Sidebar Daftar Modul -->
+        <aside class="materi-sidebar">
+          <h4>Daftar Topik Materi</h4>
+          <nav id="materi-nav-list" class="materi-nav-list"></nav>
+        </aside>
+
+        <!-- Area Konten Materi -->
+        <article id="materi-content-area" class="materi-content-area">
+          <div id="materi-body"></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 3: UJIAN RONDE 1 (50 SOAL OSNK, 3 MENIT / SOAL)
+         ==================================================================== -->
+    <section id="screen-exam" class="screen">
+      <div class="exam-layout">
+        
+        <!-- Area Utama Soal -->
+        <div class="exam-main">
+          <!-- Header Bar Soal -->
+          <div class="q-header-bar">
+            <div class="q-indicator">
+              <span class="q-num-pill">Soal No. <span id="current-q-num">1</span> / <span id="total-q-num">50</span></span>
+              <span id="q-category-badge" class="q-cat-tag">Kategori Topik</span>
+            </div>
+
+            <!-- Timer Tiap Soal (3 Menit) -->
+            <div class="q-timer-box">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Waktu Soal:</span>
+              <span id="q-timer-text" class="q-timer-text">03:00</span>
+            </div>
+          </div>
+
+          <!-- Card Soal & Opsi -->
+          <div class="q-card">
+            <p id="q-text" class="q-title">Memuat pertanyaan...</p>
+
+            <!-- Kotak Kode C++ (Jika Ada) -->
+            <div id="q-code-container" class="q-code-snippet hidden">
+              <pre><code id="q-code"></code></pre>
+            </div>
+
+            <!-- Daftar Pilihan Ganda -->
+            <div id="q-options-list" class="options-list"></div>
+
+            <!-- Action Bar -->
+            <div class="q-action-bar">
+              <button type="button" id="btn-prev-q" class="btn-secondary">&larr; Soal Sebelumnya</button>
+              <button type="button" id="btn-doubt-q" class="btn-secondary btn-doubt">&#9734; Tandai Ragu-Ragu</button>
+              <button type="button" id="btn-next-q" class="btn-secondary">Soal Berikutnya &rarr;</button>
+              <button type="button" id="btn-finish-round-1" class="btn-finish" style="display: none;">Selesai Ronde 1 &check;</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Grid Nomor Soal -->
+        <aside class="sidebar-panel">
+          <div class="sidebar-title">
+            <span>Navigasi Soal</span>
+            <span style="font-size: 0.8rem; color: var(--text-dim);">Ronde 1</span>
+          </div>
+
+          <div id="question-grid" class="grid-numbers"></div>
+
+          <div class="grid-legend">
+            <div class="legend-item"><div class="legend-box ans"></div><span>Sudah Terjawab (<span id="count-answered">0</span>)</span></div>
+            <div class="legend-item"><div class="legend-box dbt"></div><span>Ragu-Ragu</span></div>
+            <div class="legend-item"><div class="legend-box cur"></div><span>Sedang Dikerjakan</span></div>
+            <div class="legend-item"><span style="color: var(--text-dim); margin-left: 22px;">Belum: <span id="count-remaining">50</span> soal</span></div>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 4: INTRODUKSI KESEMPATAN KEDUA (RONDE 2)
+         ==================================================================== -->
+    <section id="screen-round2-intro" class="screen">
+      <div class="r2-intro-card glass-panel">
+        <div class="r2-icon-wrap">🎯</div>
+        <h2>Ronde Kesempatan Kedua</h2>
+        <p>Berdasarkan evaluasi Ronde 1, sistem telah mengumpulkan butir-butir soal yang belum benar untuk Anda perbaiki.</p>
+
+        <div class="r2-stats-grid">
+          <div class="r2-stat-box">
+            <div class="r2-stat-label">Skor Ronde 1</div>
+            <div id="r2-intro-r1-score" class="r2-stat-val">0.0</div>
+          </div>
+          <div class="r2-stat-box">
+            <div class="r2-stat-label">Soal Diperbaiki</div>
+            <div id="r2-intro-wrong-count" class="r2-stat-val gold">0</div>
+          </div>
+          <div class="r2-stat-box">
+            <div class="r2-stat-label">Potensi Poin Tambahan</div>
+            <div id="r2-intro-potential" class="r2-stat-val green">+0.0</div>
+          </div>
+        </div>
+
+        <div class="reg-rules" style="text-align: left; margin: 1.5rem 0;">
+          <h4>Aturan Ronde Kesempatan Kedua:</h4>
+          <ul>
+            <li>Hanya soal-soal yang <strong>salah / kosong di Ronde 1</strong> yang akan diujikan kembali.</li>
+            <li>Setiap jawaban yang benar pada kesempatan kedua bernilai <strong>1.0 poin</strong> (50% dari bobot normal 2.0 poin).</li>
+            <li>Waktu pengerjaan tiap butir soal tetap <strong>3 menit</strong>.</li>
+            <li>Poin dari babak ini akan langsung ditambahkan ke Skor Ronde 1 Anda.</li>
+          </ul>
+        </div>
+
+        <button type="button" id="btn-start-round-2" class="btn-primary" style="margin: 0 auto; max-width: 320px;">
+          Mulai Kesempatan Kedua Sekarang &rarr;
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 5: UJIAN RONDE 2 (KESEMPATAN KEDUA)
+         ==================================================================== -->
+    <section id="screen-round2-exam" class="screen">
+      <div class="exam-layout">
+        
+        <div class="exam-main">
+          <div class="q-header-bar">
+            <div class="q-indicator">
+              <span class="q-num-pill" style="background: var(--warning); color: #0f172a;">
+                Kesempatan Ke-2: Soal <span id="r2-current-q-num">1</span> / <span id="r2-total-q-num">0</span>
+              </span>
+              <span id="r2-q-category-badge" class="q-cat-tag">Kategori</span>
+            </div>
+
+            <div class="q-timer-box">
+              <span style="font-size: 0.85rem; color: var(--text-muted);">Waktu Soal:</span>
+              <span id="r2-q-timer-text" class="q-timer-text">03:00</span>
+            </div>
+          </div>
+
+          <div class="q-card">
+            <p id="r2-q-text" class="q-title">Memuat soal perbaikan...</p>
+
+            <div id="r2-q-code-container" class="q-code-snippet hidden">
+              <pre><code id="r2-q-code"></code></pre>
+            </div>
+
+            <div id="r2-q-options-list" class="options-list"></div>
+
+            <div class="q-action-bar">
+              <button type="button" id="btn-prev-r2" class="btn-secondary">&larr; Soal Sebelumnya</button>
+              <button type="button" id="btn-next-r2" class="btn-secondary">Soal Berikutnya &rarr;</button>
+              <button type="button" id="btn-finish-round-2" class="btn-finish" style="display: none;">Selesai Ujian & Kirim Nilai &check;</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sidebar-panel">
+          <div class="sidebar-title">
+            <span>Soal Remedial</span>
+            <span style="font-size: 0.8rem; color: #fbbf24;">50% Skor</span>
+          </div>
+
+          <div id="r2-grid" class="grid-numbers"></div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 6: HASIL AKHIR & LEADERBOARD
+         ==================================================================== -->
+    <section id="screen-result" class="screen">
+      <!-- Header Profil Peserta Hasil Ujian -->
+      <div class="result-header-panel glass-panel" style="margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <div class="user-avatar-large" id="res-avatar-large">S</div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+              <h2 id="res-student-name" style="font-family: var(--font-display); font-size: 1.6rem; color: #ffffff;">Nama Peserta</h2>
+              <span id="res-student-class" class="badge-tag" style="font-size: 0.88rem; padding: 4px 10px;">Kelas</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">
+              Hasil Ujian Resmi Simulasi OSNK Informatika &bull; Status: <span style="color: #34d399; font-weight: 600;">Selesai &amp; Tersimpan</span>
+            </p>
+          </div>
+        </div>
+        <div class="res-badge-completed">
+          🔒 Ujian Selesai &bull; Sesi Terkunci
+        </div>
+      </div>
+
+      <!-- Grid Ringkasan Nilai Siswa -->
+      <div class="result-summary-grid">
+        <div class="score-card">
+          <div class="score-card-title">Skor Ronde 1</div>
+          <div id="res-round-1-score" class="score-card-value">0.0</div>
+          <div class="score-card-sub">Bobot Normal (Maks 100)</div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-card-title">Poin Kesempatan Ke-2</div>
+          <div id="res-round-2-score" class="score-card-value" style="color: #34d399;">+0.0</div>
+          <div class="score-card-sub">Bobot Setengah (50%)</div>
+        </div>
+
+        <div class="score-card highlight">
+          <div class="score-card-title">Nilai Akhir Ujian</div>
+          <div id="res-total-score" class="score-card-value" style="color: #38bdf8;">0.0</div>
+          <div class="score-card-sub">Skala Standar Maksimal 100</div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-card-title">Peringkat Anda</div>
+          <div id="res-my-rank" class="score-card-value" style="color: #fbbf24;">#--</div>
+          <div id="res-total-participants" class="score-card-sub">dari -- Peserta</div>
+        </div>
+
+        <div class="score-card">
+          <div class="score-card-title">Status Integritas</div>
+          <div id="res-violations-badge" class="score-card-value" style="font-size: 1.5rem; color: #94a3b8;">0 Pelanggaran</div>
+          <div class="score-card-sub">Deteksi Tab Switch / Blur</div>
+        </div>
+      </div>
+
+      <!-- Panel Leaderboard -->
+      <div class="leaderboard-panel">
+        <div class="lb-header">
+          <div>
+            <h3 style="font-family: var(--font-display); font-size: 1.35rem; color: white;">Peringkat Peserta (Leaderboard)</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Menampilkan peringkat nilai akhir seluruh peserta simulasi internal.</p>
+          </div>
+          <input type="text" id="leaderboard-search" class="lb-search-input" placeholder="🔍 Cari nama atau kelas...">
+        </div>
+        <div class="lb-table-wrap">
+          <table class="lb-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Rank</th>
+                <th>Nama Peserta</th>
+                <th>Kelas / Asal</th>
+                <th class="text-center">Ronde 1</th>
+                <th class="text-center">Kesempatan 2</th>
+                <th class="text-center">Nilai Akhir</th>
+                <th class="text-center">Waktu</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-tbody">
+              <!-- Rendered via js/leaderboard.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tombol Buka Pembahasan Soal -->
+      <div style="text-align:center; margin: 1.5rem 0 0.5rem;">
+        <button type="button" id="btn-open-review" class="btn-review-all">
+          📖 Lihat Pembahasan Soal &amp; Jawaban Benar
+        </button>
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         SCREEN 7: PEMBAHASAN SOAL (REVIEW)
+         ==================================================================== -->
+    <section id="screen-review" class="screen">
+      <div class="review-header glass-panel">
+        <div>
+          <h2 style="font-family:var(--font-display); color:#fff; margin-bottom:4px;">📖 Pembahasan Soal &amp; Kunci Jawaban</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Kamu telah selesai ujian. Pelajari kunci jawaban dan penjelasan setiap soal di bawah ini.</p>
+        </div>
+        <button type="button" id="btn-back-to-result" class="btn-secondary" style="white-space:nowrap;">
+          ← Kembali ke Hasil
+        </button>
+      </div>
+
+      <!-- Filter Bar -->
+      <div class="review-filter-bar">
+        <button type="button" class="review-filter-btn active" data-filter="all">Semua Soal</button>
+        <button type="button" class="review-filter-btn" data-filter="correct">✅ Benar</button>
+        <button type="button" class="review-filter-btn" data-filter="wrong">❌ Salah / Kosong</button>
+      </div>
+
+      <!-- Review Card List -->
+      <div id="review-list" class="review-list"></div>
+    </section>
+
+  </main>
+
+
+  <!-- Modal Konfirmasi Custom (Pengganti confirm bawaan browser) -->
+  <div id="app-confirm-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-icon" id="confirm-modal-icon">❓</div>
+      <h3 id="confirm-modal-title" style="color: #ffffff;">Konfirmasi Tindakan</h3>
+      <p id="confirm-modal-message" style="color: #cbd5e1; margin-bottom: 1.75rem;">Apakah Anda yakin?</p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" id="btn-confirm-cancel" class="btn-secondary" style="padding: 10px 20px;">Batal</button>
+        <button type="button" id="btn-confirm-ok" class="btn-primary" style="width: auto; padding: 10px 24px;">Ya, Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Notifikasi Alert Custom (Pengganti alert bawaan browser) -->
+  <div id="app-alert-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-icon" id="alert-modal-icon">ℹ️</div>
+      <h3 id="alert-modal-title" style="color: #38bdf8;">Informasi Ujian</h3>
+      <p id="alert-modal-message" style="color: #cbd5e1; margin-bottom: 1.75rem;">Pesan informasi ujian.</p>
+      <button type="button" id="btn-alert-ok" class="btn-primary" style="margin: 0 auto; max-width: 160px; padding: 10px 20px;">
+        Mengerti
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Peringatan Anti-Curang -->
+  <div id="anticheat-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <h3>Peringatan Integritas Ujian!</h3>
+      <p>Anda terdeteksi melakukan tindakan mencurigakan:</p>
+      <div id="violation-reason-text" style="color: #fca5a5; font-weight: 600; margin-bottom: 10px;">
+        Meninggalkan tab browser atau berpindah jendela
+      </div>
+      <div>
+        Status Pelanggaran: <span id="violation-count-text" class="violation-pill">1 / 3</span>
+      </div>
+      <p style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 1.5rem;">
+        Sesuai regulasi, jika pelanggaran mencapai 3 kali, ujian akan dihentikan dan disubmit secara otomatis.
+      </p>
+      <button type="button" id="btn-dismiss-violation" class="btn-primary" style="margin: 0 auto; max-width: 200px;">
+        Saya Mengerti & Kembali
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Notifikasi Anti-Cheat -->
+  <div id="anticheat-toast" class="anticheat-toast">Aksi diblokir demi integritas ujian!</div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/materi.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/anticheat.js"></script>
+  <script src="js/leaderboard.js"></script>
+  <script src="js/examEngine.js"></script>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:1rem 0 1.5rem;font-size:0.78rem;color:var(--text-dim);letter-spacing:0.03em;">
+    &copy; 2026 OSNK CBT Informatika &mdash; Dibuat oleh <strong style="color:var(--accent-secondary);">Dadan Satria</strong>
+  </footer>
+
+</body>
+</html>

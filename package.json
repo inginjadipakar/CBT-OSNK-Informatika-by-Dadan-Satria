@@ -1,0 +1,12 @@
+{
+  "name": "cbt-osnk-informatika",
+  "version": "1.0.0",
+  "description": "Aplikasi CBT Latihan OSNK Informatika C++ dengan Penguncian Materi 15 Menit, Kesempatan Kedua (50% Skor), Anti-Cheat, dan Leaderboard",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": ["cbt", "osnk", "informatika", "c++", "exam-portal", "anti-cheat", "leaderboard"],
+  "author": "OSNK Informatika Team",
+  "license": "MIT"
+}
