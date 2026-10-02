@@ -21,6 +21,11 @@
       </div>
 
       <div class="nav-profile">
+        <button type="button" id="btn-nav-leaderboard" class="btn-nav-ranking" title="Lihat Peringkat Peserta">
+          <span class="ranking-icon">🏆</span>
+          <span class="ranking-text">Peringkat</span>
+        </button>
+
         <div id="user-profile-badge" class="profile-chip hidden">
           <span class="user-avatar" id="header-avatar-initial">S</span>
           <span id="header-user-name">Siswa</span>
@@ -69,6 +74,19 @@
 
           <button type="button" id="btn-start-registration" class="btn-primary">
             Masuk & Mulai Sesi Membaca Materi (15 Menit) &rarr;
+          </button>
+
+          <div class="reg-divider">
+            <span>atau pantau hasil</span>
+          </div>
+
+          <button type="button" id="btn-open-leaderboard-home" class="btn-home-ranking">
+            <span class="btn-home-ranking-icon">🏆</span>
+            <div class="btn-home-ranking-content">
+              <strong>Lihat Ranking &amp; Klasemen Peserta</strong>
+              <span id="home-ranking-summary">Pantau capaian nilai siswa yang telah menyelesaikan simulasi</span>
+            </div>
+            <span class="btn-home-ranking-arrow">&rarr;</span>
           </button>
         </form>
       </div>
@@ -439,6 +457,86 @@
 
   <!-- Toast Notifikasi Anti-Cheat -->
   <div id="anticheat-toast" class="anticheat-toast">Aksi diblokir demi integritas ujian!</div>
+
+  <!-- ====================================================================
+       MODAL LEADERBOARD / RANKING HALAMAN AWAL
+       ==================================================================== -->
+  <div id="home-leaderboard-modal" class="modal-backdrop">
+    <div class="modal-box modal-box-large lb-modal-box">
+      <!-- Modal Header -->
+      <div class="lb-modal-header">
+        <div class="lb-modal-title-group">
+          <div class="lb-modal-icon">🏆</div>
+          <div>
+            <h3>Klasemen &amp; Ranking Peserta</h3>
+            <p>Data resmi peserta yang telah menyelesaikan simulasi OSNK Informatika C++</p>
+          </div>
+        </div>
+        <div class="lb-modal-header-actions">
+          <button type="button" id="btn-refresh-home-lb" class="btn-refresh-lb" title="Muat Ulang Data Terbaru">
+            <span class="refresh-icon">🔄</span>
+            <span class="refresh-text">Segarkan</span>
+          </button>
+          <button type="button" id="btn-close-home-lb" class="btn-modal-close" title="Tutup Modal">&times;</button>
+        </div>
+      </div>
+
+      <!-- Mini Stats Bar -->
+      <div class="lb-modal-stats">
+        <div class="lb-stat-card">
+          <span class="lb-stat-label">Total Peserta Selesai</span>
+          <span id="home-stat-total" class="lb-stat-val">0</span>
+        </div>
+        <div class="lb-stat-card">
+          <span class="lb-stat-label">Nilai Tertinggi (Juara 1)</span>
+          <span id="home-stat-top" class="lb-stat-val gold">0.0</span>
+        </div>
+        <div class="lb-stat-card">
+          <span class="lb-stat-label">Rata-Rata Nilai</span>
+          <span id="home-stat-avg" class="lb-stat-val cyan">0.0</span>
+        </div>
+      </div>
+
+      <!-- Search & Filter Bar -->
+      <div class="lb-modal-filter">
+        <div class="lb-modal-search-wrap">
+          <span class="lb-search-icon">🔍</span>
+          <input type="text" id="home-leaderboard-search" class="lb-modal-search-input" placeholder="Cari nama siswa atau kelas..." autocomplete="off">
+        </div>
+        <div id="home-leaderboard-count" class="lb-search-count">Memuat data peserta...</div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="lb-table-wrap lb-modal-table-wrap">
+        <table class="lb-table">
+          <thead>
+            <tr>
+              <th style="width: 75px;">Rank</th>
+              <th>Nama Peserta</th>
+              <th>Kelas / Asal</th>
+              <th class="text-center">Ronde 1</th>
+              <th class="text-center">Kesempatan 2</th>
+              <th class="text-center">Nilai Akhir</th>
+              <th class="text-center">Waktu</th>
+            </tr>
+          </thead>
+          <tbody id="home-leaderboard-tbody">
+            <!-- Di-render dinamis oleh examEngine & LeaderboardManager -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="lb-modal-footer">
+        <div class="lb-modal-note">
+          🔒 <em>Peringkat diperbarui secara otomatis dan langsung bersumber dari data pengerjaan ujian resmi.</em>
+        </div>
+        <button type="button" id="btn-close-home-lb-footer" class="btn-secondary" style="padding: 9px 24px;">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="js/config.js"></script>

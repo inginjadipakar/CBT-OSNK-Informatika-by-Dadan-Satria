@@ -100,9 +100,26 @@ const LeaderboardManager = {
     return ranked;
   },
 
+  // Hitung ringkasan statistik dari daftar peserta
+  getStats(list) {
+    if (!list || list.length === 0) {
+      return { total: 0, topScore: 0, avgScore: 0 };
+    }
+    const total = list.length;
+    const scores = list.map(item => Number(item.totalScore) || 0);
+    const topScore = Math.max(...scores);
+    const sum = scores.reduce((acc, curr) => acc + curr, 0);
+    const avgScore = total > 0 ? (sum / total) : 0;
+    return {
+      total,
+      topScore: Math.round(topScore * 10) / 10,
+      avgScore: Math.round(avgScore * 10) / 10
+    };
+  },
+
   // Render tabel leaderboard ke DOM
-  renderTable(list, currentUserName) {
-    const tbody = document.getElementById("leaderboard-tbody");
+  renderTable(list, currentUserName, tbodyId = "leaderboard-tbody") {
+    const tbody = document.getElementById(tbodyId);
     if (!tbody) return;
     tbody.innerHTML = "";
 

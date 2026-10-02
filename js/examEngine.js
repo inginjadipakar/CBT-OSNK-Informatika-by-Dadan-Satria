@@ -157,6 +157,7 @@ class ExamEngine {
 
     // Default: Buka layar registrasi awal
     this.showScreen("screen-registration");
+    this.updateHomeLeaderboardBadge();
   }
 
   updateProfileHeader() {
@@ -277,7 +278,7 @@ class ExamEngine {
     if (btnNextR2) btnNextR2.addEventListener("click", () => this.nextRound2Question());
     if (btnFinishR2) btnFinishR2.addEventListener("click", () => this.confirmFinishRound2());
 
-    // Search di Leaderboard
+    // Search di Leaderboard Layar Hasil
     const searchInput = document.getElementById("leaderboard-search");
     if (searchInput) {
       searchInput.addEventListener("input", (e) => {
@@ -285,6 +286,52 @@ class ExamEngine {
         this.filterLeaderboard(query);
       });
     }
+
+    // Leaderboard Halaman Awal & Navbar
+    const btnOpenHomeLb = document.getElementById("btn-open-leaderboard-home");
+    if (btnOpenHomeLb) {
+      btnOpenHomeLb.addEventListener("click", () => this.openHomeLeaderboardModal());
+    }
+
+    const btnNavLb = document.getElementById("btn-nav-leaderboard");
+    if (btnNavLb) {
+      btnNavLb.addEventListener("click", () => this.openHomeLeaderboardModal());
+    }
+
+    const btnCloseHomeLb = document.getElementById("btn-close-home-lb");
+    const btnCloseHomeLbFooter = document.getElementById("btn-close-home-lb-footer");
+    if (btnCloseHomeLb) btnCloseHomeLb.addEventListener("click", () => this.closeHomeLeaderboardModal());
+    if (btnCloseHomeLbFooter) btnCloseHomeLbFooter.addEventListener("click", () => this.closeHomeLeaderboardModal());
+
+    const btnRefreshHomeLb = document.getElementById("btn-refresh-home-lb");
+    if (btnRefreshHomeLb) {
+      btnRefreshHomeLb.addEventListener("click", () => this.openHomeLeaderboardModal());
+    }
+
+    const searchHomeLb = document.getElementById("home-leaderboard-search");
+    if (searchHomeLb) {
+      searchHomeLb.addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        this.filterHomeLeaderboard(query);
+      });
+    }
+
+    // Tutup modal jika klik di luar area modal box
+    const homeLbModal = document.getElementById("home-leaderboard-modal");
+    if (homeLbModal) {
+      homeLbModal.addEventListener("click", (e) => {
+        if (e.target === homeLbModal) {
+          this.closeHomeLeaderboardModal();
+        }
+      });
+    }
+
+    // Keyboard shortcut ESC untuk menutup modal
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.closeHomeLeaderboardModal();
+      }
+    });
   }
 
   showScreen(screenId) {
@@ -293,6 +340,16 @@ class ExamEngine {
     if (activeScreen) {
       activeScreen.classList.add("active");
       window.scrollTo(0, 0);
+    }
+
+    // Sembunyikan tombol ranking di navbar saat ujian berlangsung demi integritas ujian
+    const btnNavLb = document.getElementById("btn-nav-leaderboard");
+    if (btnNavLb) {
+      if (screenId === "screen-exam" || screenId === "screen-round2-exam" || screenId === "screen-reading") {
+        btnNavLb.style.display = "none";
+      } else {
+        btnNavLb.style.display = "inline-flex";
+      }
     }
   }
 
@@ -858,6 +915,7 @@ class ExamEngine {
     }
 
     LeaderboardManager.renderTable(leaderboard, this.student.name);
+    this.updateHomeLeaderboardBadge(leaderboard.length);
 
     // Bind tombol review
     const btnOpenReview = document.getElementById("btn-open-review");
@@ -990,6 +1048,121 @@ class ExamEngine {
       (item.className && item.className.toLowerCase().includes(query))
     );
     LeaderboardManager.renderTable(filtered, this.student.name);
+  }
+
+  // --- MODAL LEADERBOARD HALAMAN AWAL ---
+  async openHomeLeaderboardModal() {
+    const modal = document.getElementById("home-leaderboard-modal");
+    if (!modal) return;
+
+    modal.classList.add("active");
+
+    const tbody = document.getElementById("home-leaderboard-tbody");
+    const countEl = document.getElementById("home-leaderboard-count");
+    const searchInput = document.getElementById("home-leaderboard-search");
+    if (searchInput) searchInput.value = "";
+
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" class="text-center" style="padding: 3rem 1rem;">
+            <div class="lb-spinner"></div>
+            <p style="margin-top: 12px; color: var(--accent); font-weight: 500; font-size: 0.95rem;">
+              Memuat klasemen peserta resmi terkini...
+            </p>
+          </td>
+        </tr>
+      `;
+    }
+    if (countEl) countEl.innerText = "Mengambil data peringkat...";
+
+    try {
+      const data = await LeaderboardManager.getLeaderboard();
+      this.homeLeaderboardData = Array.isArray(data) ? data : [];
+
+      // Update statistik ringkasan
+      const stats = LeaderboardManager.getStats(this.homeLeaderboardData);
+      const totalEl = document.getElementById("home-stat-total");
+      const topEl = document.getElementById("home-stat-top");
+      const avgEl = document.getElementById("home-stat-avg");
+
+      if (totalEl) totalEl.innerText = stats.total;
+      if (topEl) topEl.innerText = stats.total > 0 ? stats.topScore.toFixed(1) : "0.0";
+      if (avgEl) avgEl.innerText = stats.total > 0 ? stats.avgScore.toFixed(1) : "0.0";
+
+      if (countEl) {
+        countEl.innerText = `${this.homeLeaderboardData.length} Peserta Terdaftar`;
+      }
+
+      LeaderboardManager.renderTable(this.homeLeaderboardData, this.student ? this.student.name : "", "home-leaderboard-tbody");
+      this.updateHomeLeaderboardBadge(this.homeLeaderboardData.length);
+    } catch (err) {
+      if (tbody) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center" style="padding: 2.5rem 1rem; color: var(--danger);">
+              <div style="font-size: 2rem; margin-bottom: 8px;">⚠️</div>
+              <strong>Gagal memuat data peringkat</strong>
+              <p style="font-size: 0.85rem; margin-top: 4px; color: var(--text-muted);">${err.message || "Terjadi gangguan saat menghubungi server."}</p>
+            </td>
+          </tr>
+        `;
+      }
+      if (countEl) countEl.innerText = "Gagal memuat";
+    }
+  }
+
+  closeHomeLeaderboardModal() {
+    const modal = document.getElementById("home-leaderboard-modal");
+    if (modal) {
+      modal.classList.remove("active");
+    }
+  }
+
+  filterHomeLeaderboard(query) {
+    if (!this.homeLeaderboardData) return;
+    const countEl = document.getElementById("home-leaderboard-count");
+
+    if (!query) {
+      LeaderboardManager.renderTable(this.homeLeaderboardData, this.student ? this.student.name : "", "home-leaderboard-tbody");
+      if (countEl) countEl.innerText = `${this.homeLeaderboardData.length} Peserta Terdaftar`;
+      return;
+    }
+
+    const filtered = this.homeLeaderboardData.filter(item => 
+      (item.name && item.name.toLowerCase().includes(query)) || 
+      (item.className && item.className.toLowerCase().includes(query))
+    );
+
+    LeaderboardManager.renderTable(filtered, this.student ? this.student.name : "", "home-leaderboard-tbody");
+    if (countEl) {
+      countEl.innerText = `Ditemukan ${filtered.length} dari ${this.homeLeaderboardData.length} peserta`;
+    }
+  }
+
+  async updateHomeLeaderboardBadge(count = null) {
+    const summaryEl = document.getElementById("home-ranking-summary");
+    if (!summaryEl) return;
+
+    if (count !== null) {
+      if (count > 0) {
+        summaryEl.innerText = `${count} siswa telah menyelesaikan simulasi. Klik untuk melihat klasemen.`;
+      } else {
+        summaryEl.innerText = "Belum ada peserta yang selesai. Jadilah yang pertama di leaderboard!";
+      }
+      return;
+    }
+
+    try {
+      const data = await LeaderboardManager.getLeaderboard();
+      if (Array.isArray(data) && data.length > 0) {
+        summaryEl.innerText = `${data.length} siswa telah menyelesaikan simulasi. Klik untuk melihat klasemen.`;
+      } else {
+        summaryEl.innerText = "Belum ada peserta yang selesai. Jadilah yang pertama di leaderboard!";
+      }
+    } catch (e) {
+      // Abaikan jika ada kendala jaringan saat init
+    }
   }
 
   // --- ANTI-CHEAT HANDLERS ---
