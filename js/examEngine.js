@@ -155,9 +155,47 @@ class ExamEngine {
       }
     }
 
+    // Auto-sync data ujian riwayat lokal yang ada di device ini ke server/sheets
+    this.autoSyncLocalExamData();
+
     // Default: Buka layar registrasi awal
     this.showScreen("screen-registration");
     this.updateHomeLeaderboardBadge();
+  }
+
+  async autoSyncLocalExamData() {
+    try {
+      // 1. Cek dari OSNK_CBT_STATE
+      const stateRaw = localStorage.getItem("OSNK_CBT_STATE");
+      if (stateRaw) {
+        const state = JSON.parse(stateRaw);
+        if (state && state.student && state.student.name && (state.completed || state.phase === "RESULT" || (state.scoreRound1 > 0))) {
+          await LeaderboardManager.submitScore({
+            name: state.student.name,
+            className: state.student.className,
+            round1: state.scoreRound1 || 0,
+            round2: state.scoreRound2 || 0,
+            totalScore: state.totalScore || 0,
+            violations: state.violations || 0
+          });
+        }
+      }
+
+      // 2. Cek apakah ada record di localStorage leaderboard lokal yang belum tersinkron
+      const localListRaw = localStorage.getItem("osnk_cbt_leaderboard_real_v2");
+      if (localListRaw) {
+        const localList = JSON.parse(localListRaw);
+        if (Array.isArray(localList) && localList.length > 0) {
+          for (const item of localList) {
+            if (item.name && item.totalScore !== undefined) {
+              await LeaderboardManager.submitScore(item);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Auto-sync data lokal dilewati:", e.message);
+    }
   }
 
   updateProfileHeader() {
