@@ -453,9 +453,9 @@ class ExamEngineLes {
     qData.options.forEach((optText, idx) => {
       const isSelected = selected === idx;
       optionsHtml += `
-        <div class="q-opt-card ${isSelected ? 'selected' : ''}" data-opt-idx="${idx}">
-          <div class="opt-indicator">${letters[idx]}</div>
-          <div class="opt-label">${optText}</div>
+        <div class="option-item ${isSelected ? 'selected' : ''}" data-opt-idx="${idx}">
+          <div class="option-letter">${letters[idx]}</div>
+          <div class="option-text">${optText}</div>
         </div>
       `;
     });
@@ -463,7 +463,7 @@ class ExamEngineLes {
     container.innerHTML = optionsHtml;
 
     // Klik event pada card opsi
-    const optCards = container.querySelectorAll(".q-opt-card");
+    const optCards = container.querySelectorAll(".option-item");
     optCards.forEach(card => {
       card.addEventListener("click", () => {
         const optIdx = parseInt(card.getAttribute("data-opt-idx"), 10);
@@ -474,16 +474,7 @@ class ExamEngineLes {
 
   updateLockStatus(qData) {
     const isUnlocked = this.isQuestionStepsCompleted(qData);
-    const wrapper = document.getElementById("options-wrapper");
     const banner = document.getElementById("lock-status-banner");
-
-    if (wrapper) {
-      if (isUnlocked) {
-        wrapper.classList.remove("is-locked");
-      } else {
-        wrapper.classList.add("is-locked");
-      }
-    }
 
     if (banner) {
       if (isUnlocked) {
@@ -495,26 +486,19 @@ class ExamEngineLes {
       } else {
         banner.className = "lock-banner locked";
         banner.innerHTML = `
-          <span>🔒</span>
-          <span><strong>Pilihan Ganda Terkunci!</strong> Lengkapi semua isian pada kolom Langkah Pengerjaan di atas terlebih dahulu.</span>
+          <span>📝</span>
+          <span><strong>Langkah Pengerjaan Terpandu:</strong> Isi kolom angka di atas untuk membantu operasi, lalu pilih opsi jawaban di bawah.</span>
         `;
       }
     }
   }
 
   handleOptionClick(qData, optIdx) {
-    // Pastikan langkah sudah lengkap diisi
-    if (!this.isQuestionStepsCompleted(qData)) {
-      this.triggerLockShake();
-      this.showToast("Wajib mengisi seluruh angka/hasil pada Langkah Pengerjaan terlebih dahulu!", "warning");
-      return;
-    }
-
     const qId = qData.id;
     this.selectedOptions[qId] = optIdx;
 
     // Update UI pilihan opsi
-    const optCards = document.querySelectorAll("#options-list-container .q-opt-card");
+    const optCards = document.querySelectorAll("#options-list-container .option-item");
     optCards.forEach(c => {
       const idx = parseInt(c.getAttribute("data-opt-idx"), 10);
       if (idx === optIdx) {
@@ -523,6 +507,13 @@ class ExamEngineLes {
         c.classList.remove("selected");
       }
     });
+
+    // Peringatan halus jika langkah belum diisi, namun pilihan tetap tersimpan aman
+    if (!this.isQuestionStepsCompleted(qData)) {
+      this.showToast("Jawaban tersimpan! Jangan lupa lengkapi juga langkah pengerjaan di atas ya.", "warning");
+    } else {
+      this.showToast("Jawaban berhasil disimpan!", "success");
+    }
 
     this.renderNavigationGrid();
     this.saveState();
@@ -573,10 +564,10 @@ class ExamEngineLes {
     const btn = document.getElementById("btn-doubt-q");
     if (!btn) return;
     if (this.doubtStatus[qId]) {
-      btn.classList.add("btn-doubt-active");
+      btn.classList.add("active");
       btn.innerText = "★ Ditandai Ragu-ragu";
     } else {
-      btn.classList.remove("btn-doubt-active");
+      btn.classList.remove("active");
       btn.innerText = "☆ Tandai Ragu-ragu";
     }
   }
@@ -594,20 +585,20 @@ class ExamEngineLes {
       const isOptionPicked = this.selectedOptions[qId] !== undefined;
       const isDoubt = !!this.doubtStatus[qId];
 
-      let statusClass = "";
-      if (isCurrent) statusClass += " current-active";
+      let statusClass = "grid-q-btn";
+      if (isCurrent) statusClass += " current";
       if (isDoubt) {
-        statusClass += " doubtful";
-      } else if (isStepsDone && isOptionPicked) {
-        statusClass += " completed-both";
-      } else if (isStepsDone || isOptionPicked) {
+        statusClass += " doubt";
+      } else if (isOptionPicked) {
+        statusClass += " answered";
+      } else if (isStepsDone) {
         statusClass += " partially-filled";
       }
 
       gridHtml += `
         <button 
           type="button" 
-          class="q-grid-btn ${statusClass}" 
+          class="${statusClass}" 
           data-grid-idx="${idx}"
           title="Soal ${idx + 1}"
         >
@@ -619,7 +610,7 @@ class ExamEngineLes {
     grid.innerHTML = gridHtml;
 
     // Pasang click listener
-    grid.querySelectorAll(".q-grid-btn").forEach(btn => {
+    grid.querySelectorAll(".grid-q-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const idx = parseInt(btn.getAttribute("data-grid-idx"), 10);
         this.jumpToQuestion(idx);
@@ -634,6 +625,11 @@ class ExamEngineLes {
     const navSummary = document.getElementById("nav-grid-summary");
     if (navSummary) {
       navSummary.innerText = `${answeredCount} / ${this.activeQuestionIds.length} Terjawab`;
+    }
+
+    const countAnsEl = document.getElementById("count-answered");
+    if (countAnsEl) {
+      countAnsEl.innerText = answeredCount;
     }
   }
 
