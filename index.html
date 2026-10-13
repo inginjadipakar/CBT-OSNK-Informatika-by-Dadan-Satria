@@ -21,6 +21,11 @@
       </div>
 
       <div class="nav-profile">
+        <a href="les.html" class="btn-nav-ranking" title="Beralih ke Portal CBT Peserta Les" style="text-decoration:none; margin-right:4px;">
+          <span class="ranking-icon">📐</span>
+          <span class="ranking-text">Portal Peserta Les</span>
+        </a>
+
         <button type="button" id="btn-nav-leaderboard" class="btn-nav-ranking" title="Lihat Peringkat Peserta">
           <span class="ranking-icon">🏆</span>
           <span class="ranking-text">Peringkat</span>
@@ -75,6 +80,19 @@
           <button type="button" id="btn-start-registration" class="btn-primary">
             Masuk & Mulai Sesi Membaca Materi (15 Menit) &rarr;
           </button>
+
+          <div class="reg-divider">
+            <span>atau jalur khusus belajar</span>
+          </div>
+
+          <a href="les.html" id="btn-enter-peserta-les" class="btn-home-ranking" style="text-decoration:none; background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(6, 182, 212, 0.15)); border: 1.5px solid rgba(99, 102, 241, 0.45); margin-bottom: 0.75rem;">
+            <span class="btn-home-ranking-icon" style="background: rgba(99, 102, 241, 0.25);">📐</span>
+            <div class="btn-home-ranking-content">
+              <strong style="color: #a5b4fc;">Masuk Peserta Les &rarr; Bab 1: Eksponen &amp; Logaritma</strong>
+              <span style="color: var(--text-muted);">60 Soal Fase E &bull; Guided Steps &bull; Sistem Remedial Berkelanjutan</span>
+            </div>
+            <span class="btn-home-ranking-arrow" style="color: #38bdf8;">&rarr;</span>
+          </a>
 
           <div class="reg-divider">
             <span>atau pantau hasil</span>
@@ -536,15 +554,98 @@
         </button>
       </div>
     </div>
+  <!-- MODAL MEME SALAH RONDE 2 (KESEMPATAN KEDUA) -->
+  <div id="meme-wrong-modal" class="meme-modal-backdrop">
+    <div class="meme-modal-card">
+      <div class="meme-modal-top">
+        <span class="meme-emoji-bounce">🤣</span>
+        <h3 class="meme-title">Waduh, Salah Lagi!</h3>
+        <span class="meme-countdown-badge">Auto Next: <b id="meme-countdown-num">3</b>s</span>
+      </div>
+      <div class="meme-img-container">
+        <img id="meme-modal-img" src="" alt="Meme Salah" />
+      </div>
+      <div class="meme-alert-text">
+        🔒 <strong>Jawaban Terkunci Permanen!</strong><br>
+        Soal remedial ini tidak dapat diperbaiki lagi.
+      </div>
+    </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="js/config.js"></script>
-  <script src="js/materi.js"></script>
-  <script src="js/questions.js"></script>
-  <script src="js/anticheat.js"></script>
-  <script src="js/leaderboard.js"></script>
-  <script src="js/examEngine.js"></script>
+  <!-- Firebase CDN (Compat v10) — harus di-load SEBELUM firebase.js & app scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics-compat.js"></script>
+
+  <!-- Firebase Init (config + window.db) -->
+  <script src="js/firebase.js?v=20261010_v2"></script>
+
+  <!-- App Scripts -->
+  <script src="js/config.js?v=20261010_v2"></script>
+  <script src="js/materi.js?v=20261010_v2"></script>
+  <script src="js/questions.js?v=20261010_v2"></script>
+  <script src="js/anticheat.js?v=20261010_v2"></script>
+  <script src="js/leaderboard.js?v=20261010_v2"></script>
+  <script src="js/examEngine.js?v=20261010_v2"></script>
+
+  <!-- Realtime Leaderboard Listener Bootstrap -->
+  <script>
+    // Aktifkan realtime listener saat modal leaderboard dibuka
+    document.addEventListener("DOMContentLoaded", () => {
+      const btnLeaderboard = document.getElementById("btn-nav-leaderboard");
+      const modal = document.getElementById("leaderboard-modal");
+      const btnClose = document.getElementById("btn-close-leaderboard");
+
+      let isListening = false;
+
+      function startRealtimeLB() {
+        if (isListening) return;
+        isListening = true;
+        LeaderboardManager.listenLeaderboard((list) => {
+          const stats = LeaderboardManager.getStats(list);
+
+          // Update summary di layar registrasi awal
+          const summaryEl = document.getElementById("home-ranking-summary");
+          if (summaryEl) {
+            summaryEl.innerText = stats.total > 0
+              ? `${stats.total} siswa telah menyelesaikan simulasi. Klik untuk melihat klasemen.`
+              : "Belum ada peserta yang selesai. Jadilah yang pertama di leaderboard!";
+          }
+
+          // Update stat cards di modal awal
+          const homeTotalEl = document.getElementById("home-stat-total");
+          const homeTopEl = document.getElementById("home-stat-top");
+          const homeAvgEl = document.getElementById("home-stat-avg");
+          if (homeTotalEl) homeTotalEl.innerText = stats.total;
+          if (homeTopEl) homeTopEl.innerText = stats.total > 0 ? stats.topScore.toFixed(1) : "0.0";
+          if (homeAvgEl) homeAvgEl.innerText = stats.total > 0 ? stats.avgScore.toFixed(1) : "0.0";
+
+          const homeCountEl = document.getElementById("home-leaderboard-count");
+          if (homeCountEl) homeCountEl.innerText = `${stats.total} Peserta Terdaftar`;
+
+          // Render tabel modal awal dan tabel layar hasil
+          const currentName = window.examEngine && window.examEngine.student ? window.examEngine.student.name : "";
+          LeaderboardManager.renderTable(list, currentName, "home-leaderboard-tbody");
+          LeaderboardManager.renderTable(list, currentName, "leaderboard-tbody");
+        });
+      }
+
+      if (btnLeaderboard) {
+        btnLeaderboard.addEventListener("click", () => {
+          startRealtimeLB();
+        });
+      }
+
+      if (btnClose) {
+        btnClose.addEventListener("click", () => {
+          // Jangan stop listener — biarkan tetap aktif di background agar leaderboard selalu fresh
+        });
+      }
+
+      // Mulai listener segera saat halaman load (untuk update badge navbar)
+      startRealtimeLB();
+    });
+  </script>
 
   <!-- Footer -->
   <footer style="text-align:center;padding:1rem 0 1.5rem;font-size:0.78rem;color:var(--text-dim);letter-spacing:0.03em;">

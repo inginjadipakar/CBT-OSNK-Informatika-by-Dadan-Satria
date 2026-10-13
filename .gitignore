@@ -3,3 +3,4 @@ test_build/
 __pycache__/
 .DS_Store
 Thumbs.db
+.firebase/

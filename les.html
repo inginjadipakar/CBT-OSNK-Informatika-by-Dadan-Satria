@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CBT Peserta Les — Bab 1: Eksponen & Logaritma Fase E</title>
+  <meta name="description" content="Platform CBT Khusus Peserta Les Matematika Fase E: 60 Soal Eksponen & Logaritma dengan Guided Steps dan Sistem Remedial Berkelanjutan.">
+
+  <!-- KaTeX for High-Performance Math Formula Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style_les.css">
+</head>
+<body class="no-copy">
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon" style="background: linear-gradient(135deg, #6366f1, #06b6d4);">📐</div>
+        <div class="brand-text">
+          <h1>CBT PESERTA LES &bull; FASE E</h1>
+          <p>Bab 1: Eksponen &amp; Logaritma &bull; 60 Soal &bull; <span style="color:#38bdf8;">Guided Steps &amp; Continuous Remedial</span></p>
+        </div>
+      </div>
+
+      <div class="nav-profile">
+        <a href="index.html" class="btn-nav-ranking" title="Beralih ke CBT OSNK Informatika" style="text-decoration:none; margin-right:4px;">
+          <span class="ranking-icon">🖥️</span>
+          <span class="ranking-text">Portal OSNK</span>
+        </a>
+
+        <button type="button" id="btn-nav-leaderboard" class="btn-nav-ranking" title="Lihat Peringkat Peserta Les">
+          <span class="ranking-icon">🏆</span>
+          <span class="ranking-text">Peringkat Les</span>
+        </button>
+
+        <div id="user-profile-badge" class="profile-chip hidden">
+          <span class="user-avatar" id="header-avatar-initial">L</span>
+          <span id="header-user-name">Siswa</span>
+          <span class="badge-tag" id="header-user-class">Kelas</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-wrapper">
+
+    <!-- ====================================================================
+         SCREEN 1: REGISTRASI & IDENTITAS PESERTA LES
+         ==================================================================== -->
+    <section id="screen-registration" class="screen active">
+      <div class="reg-container glass-panel">
+        <div class="reg-header">
+          <span class="badge-les-mode">📚 Portal Pembelajaran Peserta Les</span>
+          <h2>Bab 1: Eksponen &amp; Logaritma (Fase E)</h2>
+          <p>Silakan isi identitas Anda untuk memulai sesi belajar mandiri dan pengerjaan terpandu.</p>
+        </div>
+
+        <div class="reg-rules">
+          <h4>📌 Aturan & Mekanisme Pengerjaan</h4>
+          <ul>
+            <li><strong>Cakupan Materi (60 Soal):</strong> Eksponen Dasar, Sifat-Sifat Eksponen, Persamaan Eksponen, Bentuk Akar &amp; Pangkat Pecahan, Fungsi Eksponen, dan Logaritma.</li>
+            <li><strong>Aturan Wajib — Guided Steps:</strong> Pada setiap soal, Anda <strong>wajib mengisi semua isian angka/hasil pada kolom Langkah Pengerjaan terlebih dahulu</strong>. Opsi pilihan ganda A-E akan terkunci sampai seluruh langkah terisi.</li>
+            <li><strong>Sistem Remedial Berkelanjutan:</strong> Sesi ujian akan terus berlanjut (Sesi 1, Sesi 2, dst.) untuk memperbaiki soal-soal yang salah, sampai Anda berhasil <strong>benar semua (60/60 tuntas)</strong>.</li>
+            <li><strong>Papan Peringkat Realtime:</strong> Setiap kali Anda menyelesaikan sebuah sesi, hasil dan posisi ranking Anda di leaderboard langsung diperbarui.</li>
+          </ul>
+        </div>
+
+        <form id="form-registration" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="input-name">Nama Lengkap Siswa</label>
+            <input type="text" id="input-name" class="form-input" placeholder="Contoh: Ahmad Zaki" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-class">Kelas / Kelompok Belajar</label>
+            <input type="text" id="input-class" class="form-input" placeholder="Contoh: X-1 / Kelompok A" required autocomplete="off">
+          </div>
+
+          <button type="button" id="btn-start-les" class="btn-primary" style="background: linear-gradient(135deg, #4f46e5, #0ea5e9);">
+            Mulai Sesi Belajar &amp; Kerjakan Soal (Sesi 1) &rarr;
+          </button>
+
+          <div class="reg-divider">
+            <span>atau pantau capaian</span>
+          </div>
+
+          <button type="button" onclick="window.examEngineLes.openLeaderboardModal()" class="btn-home-ranking">
+            <span class="btn-home-ranking-icon">🏆</span>
+            <div class="btn-home-ranking-content">
+              <strong>Klasemen Peringkat Peserta Les</strong>
+              <span>Pantau capaian skor dan status penuntasan 60 soal teman-teman les Anda</span>
+            </div>
+            <span class="btn-home-ranking-arrow">&rarr;</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 2: CBT ENGINE DENGAN GUIDED STEPS & PILIHAN GANDA
+         ==================================================================== -->
+    <section id="screen-exam" class="screen">
+      <div class="exam-layout">
+
+        <!-- Area Utama Soal -->
+        <div class="exam-main">
+          <!-- Header Bar Soal -->
+          <div class="q-header-bar">
+            <div class="q-indicator">
+              <span id="session-indicator-badge" class="session-pill">🌟 Sesi 1</span>
+              <span class="q-num-pill">Soal <span id="current-q-num">1</span> / <span id="total-q-num">60</span></span>
+              <span id="q-category-badge" class="q-cat-tag">Topik</span>
+            </div>
+
+            <!-- Timer / Durasi Pengerjaan -->
+            <div class="q-timer-container">
+              <span style="font-size:0.75rem; color:var(--text-dim);">Waktu Sesi:</span>
+              <div id="exam-timer-text" style="font-family:var(--font-mono); font-weight:700; color:#38bdf8; font-size:1.05rem;">00:00</div>
+            </div>
+          </div>
+
+          <!-- Question Content Card -->
+          <div class="q-card glass-panel" id="question-display-area">
+            <!-- Teks Pertanyaan -->
+            <div id="q-text-content" class="q-text"></div>
+
+            <!-- Kolom Langkah Pengerjaan (Interactive Guided Steps) -->
+            <div id="steps-card-container" class="steps-container"></div>
+
+            <!-- Banner Status Kunci Opsi -->
+            <div id="lock-status-banner" class="lock-banner locked">
+              <span>🔒</span>
+              <span><strong>Pilihan Ganda Terkunci!</strong> Lengkapi semua isian pada kolom Langkah Pengerjaan di atas terlebih dahulu.</span>
+            </div>
+
+            <!-- Pilihan Ganda A - E -->
+            <div id="options-wrapper" class="options-wrapper is-locked">
+              <div id="options-list-container" class="q-options"></div>
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Action Bar -->
+          <div class="q-footer-bar">
+            <button type="button" id="btn-prev-q" class="btn-nav">
+              &larr; Soal Sebelumnya
+            </button>
+
+            <button type="button" id="btn-doubt-q" class="btn-doubt">
+              ☆ Tandai Ragu-ragu
+            </button>
+
+            <button type="button" id="btn-next-q" class="btn-nav">
+              Soal Berikutnya &rarr;
+            </button>
+
+            <button type="button" id="btn-finish-session" class="btn-action-start" style="margin-left:auto; background: linear-gradient(135deg, #10b981, #059669);">
+              Selesaikan Sesi &amp; Lihat Ranking &rarr;
+            </button>
+          </div>
+        </div>
+
+        <!-- Sidebar Panel Navigasi Soal -->
+        <aside class="exam-sidebar">
+          <div class="sidebar-header">
+            <h4>Navigasi Butir Soal</h4>
+            <div id="nav-grid-summary" class="q-summary-text">0 / 60 Terjawab</div>
+          </div>
+
+          <div class="legend-box" style="display:grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; font-size:0.75rem; margin-bottom:1rem; padding:0.6rem; background:rgba(0,0,0,0.25); border-radius:6px;">
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:3px; background:#334155;"></span> Kosong</div>
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:3px; background:#f59e0b;"></span> Langkah Saja</div>
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:3px; background:#10b981;"></span> Lengkap (A-E)</div>
+            <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:3px; background:#8b5cf6;"></span> Ragu-ragu</div>
+          </div>
+
+          <div id="question-nav-grid" class="q-grid"></div>
+
+          <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08);">
+            <button type="button" onclick="window.examEngineLes.openLeaderboardModal()" class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.85rem;">
+              <span>🏆</span> Lihat Papan Peringkat Realtime
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 3: HASIL SESI, REKAP REMEDIAL & PERINGKAT
+         ==================================================================== -->
+    <section id="screen-result" class="screen">
+      <div class="reg-container glass-panel" style="max-width: 860px;">
+        <div class="reg-header">
+          <span class="badge-les-mode">📊 Rekap Capaian Sesi</span>
+          <h2 id="result-session-title">Sesi Selesai</h2>
+          <p id="result-session-desc">Evaluasi pengerjaan Anda telah tersimpan dan diperbarui di papan peringkat.</p>
+        </div>
+
+        <!-- Stat Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="home-stat-card">
+            <span class="home-stat-label">Benar di Sesi Ini</span>
+            <strong id="stat-correct-count" class="home-stat-value" style="color: #10b981;">0</strong>
+          </div>
+          <div class="home-stat-card">
+            <span class="home-stat-label">Salah / Perlu Remidi</span>
+            <strong id="stat-wrong-count" class="home-stat-value" style="color: #ef4444;">0</strong>
+          </div>
+          <div class="home-stat-card">
+            <span class="home-stat-label">Total Tuntas Master</span>
+            <strong id="stat-master-total" class="home-stat-value" style="color: #38bdf8;">0 / 60</strong>
+          </div>
+          <div class="home-stat-card">
+            <span class="home-stat-label">Persentase Penguasaan</span>
+            <strong id="stat-accuracy" class="home-stat-value" style="color: #fbbf24;">0%</strong>
+          </div>
+        </div>
+
+        <!-- Area Jika Belum Tuntas (Ada Soal Salah -> Remedial Action) -->
+        <div id="remedial-action-area" class="remedial-banner">
+          <div class="remedial-banner-info">
+            <h3><span>🔁</span> Sesi Remedial Diperlukan</h3>
+            <p>Untuk menuntaskan bab ini, Anda wajib memperbaiki soal-soal yang keliru sampai seluruh 60 soal benar.</p>
+            <div style="margin-top: 0.8rem;">
+              <span style="font-size: 0.82rem; color: var(--text-dim); display: block; margin-bottom: 0.4rem;">Daftar Soal yang Perlu Diperbaiki:</span>
+              <div id="wrong-questions-list" style="display: flex; flex-wrap: wrap; gap: 0.4rem;"></div>
+            </div>
+          </div>
+          <button type="button" id="btn-start-remedial" class="btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); padding: 0.9rem 1.6rem; font-size: 1rem;">
+            Mulai Sesi Remedial Berikutnya &rarr;
+          </button>
+        </div>
+
+        <!-- Area Jika Tuntas Sempurna (60/60 Benar) -->
+        <div id="celebration-action-area" class="celebrate-card hidden">
+          <div class="celebrate-trophy">🏆🌟</div>
+          <h3 style="font-size: 1.5rem; color: #34d399; margin-bottom: 0.5rem;">Selamat! Anda Telah Tuntas Sempurna!</h3>
+          <p style="color: var(--text-muted); max-width: 500px; margin: 0 auto 1.5rem;">
+            Seluruh 60 butir soal Bab 1 Eksponen &amp; Logaritma telah Anda selesaikan dengan benar melalui pemahaman langkah demi langkah.
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1.5rem;">
+          <button type="button" id="btn-result-leaderboard" class="btn-primary" style="flex: 1; min-width: 200px;">
+            🏆 Buka Papan Peringkat Realtime
+          </button>
+          <button type="button" id="btn-restart-exam" class="btn-secondary" style="flex: 1; min-width: 180px;">
+            🔄 Ulang Dari Awal (Reset)
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       MODAL: PAPAN PERINGKAT REALTIME PESERTA LES
+       ==================================================================== -->
+  <div id="leaderboard-modal" class="modal-overlay">
+    <div class="modal-card glass-panel" style="max-width: 840px;">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.5rem;">🏆</span>
+          <div>
+            <h3 style="font-size: 1.15rem; color: var(--text-main);">Peringkat Peserta Les</h3>
+            <p style="font-size: 0.78rem; color: var(--text-dim);">Klasemen Penuntasan 60 Soal Bab 1: Eksponen &amp; Logaritma</p>
+          </div>
+        </div>
+        <button type="button" id="btn-close-leaderboard" class="modal-close-btn">&times;</button>
+      </div>
+
+      <!-- Quick Summary Stats -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1rem;">
+        <div class="home-stat-card" style="padding: 0.75rem;">
+          <span class="home-stat-label">Total Peserta</span>
+          <strong id="modal-stat-total" class="home-stat-value" style="font-size: 1.3rem;">0</strong>
+        </div>
+        <div class="home-stat-card" style="padding: 0.75rem;">
+          <span class="home-stat-label">Skor Tertinggi</span>
+          <strong id="modal-stat-top" class="home-stat-value" style="font-size: 1.3rem; color: #10b981;">0/60</strong>
+        </div>
+        <div class="home-stat-card" style="padding: 0.75rem;">
+          <span class="home-stat-label">Tuntas Sempurna</span>
+          <strong id="modal-stat-completed" class="home-stat-value" style="font-size: 1.3rem; color: #fbbf24;">0</strong>
+        </div>
+      </div>
+
+      <!-- Leaderboard Table -->
+      <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+        <table class="table-modern">
+          <thead>
+            <tr>
+              <th style="width: 55px; text-align: center;">Rank</th>
+              <th>Nama Siswa &amp; Kelas</th>
+              <th style="text-align: center;">Benar</th>
+              <th style="text-align: center;">Sesi</th>
+              <th style="text-align: center;">Status</th>
+              <th style="text-align: center;">Waktu</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboard-modal-tbody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 2rem;">
+                Memuat data klasemen peserta...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:1.5rem 0;font-size:0.78rem;color:var(--text-dim);letter-spacing:0.03em;">
+    &copy; 2026 CBT Peserta Les &mdash; Modul Bab 1: Eksponen &amp; Logaritma (Fase E)
+  </footer>
+
+  <!-- Firebase CDN (Compat v10) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics-compat.js"></script>
+
+  <!-- Firebase Config Init -->
+  <script src="js/firebase.js?v=20261010_v2"></script>
+
+  <!-- Questions Bank & Engine -->
+  <script src="js/questions_les.js?v=20261010_v2"></script>
+  <script src="js/leaderboard_les.js?v=20261010_v2"></script>
+  <script src="js/examEngine_les.js?v=20261010_v2"></script>
+
+</body>
+</html>

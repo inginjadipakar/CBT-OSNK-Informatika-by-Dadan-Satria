@@ -1,280 +1,63 @@
-// Modul Materi Bacaan C++ Persiapan OSNK Informatika
-// Diperkaya dari:
-// 1. Modul Persiapan Olimpiade Sains Nasional (OSN) Informatika - Bab I Dasar Pemrograman
-// 2. Modul C++ Dasar SMA Bagian 1 - Dadan Satria
+// Modul Materi Bacaan Persiapan OSNK Informatika
+// Berdasarkan Dokumen Resmi:
+// 'Bab I Dasar Pemrograman Modul Persiapan Olimpiade Sains Nasional (OSN) Informatika' (MAN Purworejo)
 // Dibaca peserta selama 15 menit sebelum ujian, setelah itu dikunci permanen.
 
 const MATERI_OSNK = [
   {
-    id: "modul-1",
-    title: "1. Pola Pikir Programmer & Alur IPO (Input - Proses - Output)",
-    content: `
-      <h4>Alur Berpikir Programmer</h4>
-      <p>Sesuai <em>Modul C++ Dasar SMA</em>, sebelum menulis sebaris kode, seorang pemrogram harus membagi setiap masalah menjadi tiga tahapan esensial:</p>
-      <ul>
-        <li><strong>Input:</strong> Data yang diterima dari pengguna atau soal (melalui <code>cin</code>).</li>
-        <li><strong>Proses:</strong> Operasi matematika, logika, atau algoritma untuk mengolah input.</li>
-        <li><strong>Output:</strong> Hasil akhir yang ditampilkan ke layar (melalui <code>cout</code>).</li>
-      </ul>
-      <pre><code>// Contoh Alur IPO:
-#include &lt;iostream&gt;
-using namespace std;
-
-int main() {
-    int harga = 5000;  // Input/Data
-    int jumlah = 3;
-    int total = harga * jumlah; // Proses
-    cout &lt;&lt; "Total: " &lt;&lt; total; // Output
-    return 0;
-}</code></pre>
-    `
+    "id": "modul-1",
+    "title": "1. Struktur Dasar Program C++, Header, Main & I/O",
+    "content": "\n      <h4>A. Struktur Dasar Program C++</h4>\n      <p>Berdasarkan <em>Modul Persiapan OSN Informatika Bab I</em>, C++ adalah bahasa pemrograman umum yang efisien dan banyak digunakan dalam olimpiade informatika. Setiap program C++ memiliki komponen pokok:</p>\n      <ul>\n        <li><code>#include &lt;iostream&gt;</code>: <strong>Header</strong> standar untuk menyertakan pustaka input/output stream.</li>\n        <li><code>using namespace std;</code>: Memberitahukan compiler untuk menggunakan entitas dalam namespace standar C++ (seperti <code>cin</code>, <code>cout</code>, <code>endl</code>).</li>\n        <li><code>int main() { ... return 0; }</code>: <strong>Fungsi Utama (main function)</strong> tempat eksekusi pertama kali dimulai saat program dijalankan. Perintah <code>return 0;</code> menandakan program berakhir dengan sukses.</li>\n        <li><strong>Statement:</strong> Pernyataan tindakan dalam program, diakhiri dengan tanda titik-koma (<code>;</code>).</li>\n      </ul>\n\n      <h4>Statement Masukan (cin) & Keluaran (cout)</h4>\n      <p>Statement digunakan untuk pengambilan input melalui <code>cin &gt;&gt;</code> dan output ke layar melalui <code>cout &lt;&lt;</code>:</p>\n      <pre><code>#include &lt;iostream&gt;\nusing namespace std;\n\nint main() {\n    int sisi, luas, keliling;\n    cout &lt;&lt; \"Masukkan panjang sisi persegi: \";\n    cin &gt;&gt; sisi;\n    \n    luas = sisi * sisi;\n    keliling = 4 * sisi;\n    \n    cout &lt;&lt; \"Luas Persegi: \" &lt;&lt; luas &lt;&lt; endl;\n    cout &lt;&lt; \"Keliling Persegi: \" &lt;&lt; keliling &lt;&lt; endl;\n    return 0;\n}</code></pre>\n\n      <h4>Komentar Kode Program</h4>\n      <ul>\n        <li><strong>Komentar Satu Baris:</strong> Ditulis menggunakan <code>// komentar</code>.</li>\n        <li><strong>Komentar Multi-Baris:</strong> Ditulis menggunakan <code>/* komentar panjang */</code>. Seluruh komentar diabaikan oleh compiler.</li>\n      </ul>\n        "
   },
   {
-    id: "modul-2",
-    title: "2. Struktur Program C++, Header & Komentar",
-    content: `
-      <h4>Komponen Anatomi Program C++</h4>
-      <p>Berdasarkan <em>Modul Persiapan OSN Informatika</em>, program C++ memiliki bagian-bagian pokok:</p>
-      <ul>
-        <li><code>#include &lt;iostream&gt;</code>: Header standar untuk fungsi masukan dan keluaran stream.</li>
-        <li><code>using namespace std;</code>: Memberitahu compiler untuk menggunakan seluruh entitas standar namespace.</li>
-        <li><code>int main() { ... return 0; }</code>: Fungsi utama tempat eksekusi pertama kali dimulai. Nilai balik <code>0</code> menandakan program berakhir sukses tanpa error.</li>
-        <li><strong>Komentar Satu Baris:</strong> Ditulis menggunakan <code>// komentar</code>.</li>
-        <li><strong>Komentar Multi-Baris:</strong> Ditulis menggunakan <code>/* komentar panjang */</code>. Seluruh komentar diabaikan oleh compiler.</li>
-      </ul>
-      <div class="note-box">
-        <strong>Fast I/O untuk Olimpiade:</strong> Untuk menghindari Time Limit Exceeded (TLE) saat membaca input puluhan ribu angka, selalu sertakan:
-        <br><code>ios_base::sync_with_stdio(false); cin.tie(NULL);</code>
-      </div>
-    `
+    "id": "modul-2",
+    "title": "2. Tipe Data C++: Primitive & Non-Primitive",
+    "content": "\n      <h4>B. Tipe Data C++</h4>\n      <p>Modul membagi tipe data C++ ke dalam dua kelompok utama:</p>\n      \n      <h4>1. Tipe Data Primitive (Sederhana)</h4>\n      <ul>\n        <li><code>int</code>: Tipe data angka bulat. Contoh: <code>10</code>, <code>9</code>, <code>-17</code>.</li>\n        <li><code>float</code>: Tipe data angka pecahan desimal presisi tunggal. Contoh: <code>3.14</code>, <code>2.55</code>, <code>10.5</code>.</li>\n        <li><code>bool</code>: Tipe data logika bernilai <code>true</code> (1) atau <code>false</code> (0).</li>\n        <li><code>char</code>: Tipe data untuk 1 karakter alfanumerik atau simbol, diapit petik tunggal. Contoh: <code>'A'</code>, <code>'B'</code>, <code>'$'</code>.</li>\n      </ul>\n\n      <h4>2. Tipe Data Non-Primitive (Kompleks)</h4>\n      <ul>\n        <li><code>string</code>: Kumpulan dari karakter (teks), diapit tanda petik ganda. Contoh: <code>\"Saya siswa MAN Purworejo\"</code>.</li>\n        <li><code>Array (Larik)</code>: Kumpulan data yang memiliki tipe data sejenis. Penulisan: <code>tipe_data nama_array[ukuran];</code>. Indeks array C++ dimulai dari <strong>0</strong>.</li>\n      </ul>\n      <pre><code>// Contoh Array di C++:\nstring NamaSiswa[6] = {\"andi\", \"agus\", \"budi\", \"bayu\", \"caca\", \"cucu\"};\n// NamaSiswa[0] adalah \"andi\", NamaSiswa[3] adalah \"bayu\"\n\nint nilai[5] = {3, 5, 8, 10, 11};\n// nilai[0] bernilai 3, nilai[4] bernilai 11</code></pre>\n        "
   },
   {
-    id: "modul-3",
-    title: "3. Aturan Identifier & Kata Kunci (Keyword) Terlarang",
-    content: `
-      <h4>Aturan Penamaan Variabel (Identifier) C++</h4>
-      <p>Sangat sering diujikan pada soal teori OSNK Informatika. Aturan baku penamaan identifier:</p>
-      <ol>
-        <li>Hanya boleh terdiri dari huruf (a-z, A-Z), angka (0-9), dan garis bawah (<em>underscore</em> <code>_</code>).</li>
-        <li><strong>TIDAK BOLEH diawali angka</strong> (contoh tidak valid: <code>1nilai</code>, <code>2data</code>; contoh valid: <code>nilai1</code>, <code>_total</code>).</li>
-        <li><strong>TIDAK BOLEH mengandung spasi</strong> atau simbol khusus (seperti <code>$</code>, <code>@</code>, <code>-</code>, <code>#</code>).</li>
-        <li><strong>Bersifat Case-Sensitive:</strong> Variabel <code>total</code>, <code>Total</code>, dan <code>TOTAL</code> adalah tiga variabel yang berbeda.</li>
-        <li><strong>DILARANG menggunakan Reserved Keywords C++:</strong> Tidak boleh menamai variabel dengan kata kunci internal bahasa C++, antara lain: <code>int</code>, <code>float</code>, <code>double</code>, <code>for</code>, <code>while</code>, <code>if</code>, <code>else</code>, <code>return</code>, <code>const</code>, <code>switch</code>, <code>break</code>, <code>case</code>, <code>void</code>.</li>
-      </ol>
-    `
+    "id": "modul-3",
+    "title": "3. Variabel, Deklarasi, Konstanta, & Aturan Identifier",
+    "content": "\n      <h4>C. Variabel & Aturan Identifier</h4>\n      <p>Variabel diibaratkan wadah penyimpanan data dalam memori. Nilainya dapat ditentukan di awal atau berubah sepanjang eksekusi program.</p>\n      \n      <h4>Bentuk Pendeklarasian Variabel</h4>\n      <ol>\n        <li><strong>Deklarasi tanpa nilai awal:</strong> <code>int a; float b; char c;</code></li>\n        <li><strong>Deklarasi dengan nilai awal:</strong> <code>int umur = 17; float tinggi = 168.5;</code></li>\n        <li><strong>Variabel Konstanta (const):</strong> Nilainya tetap dan tidak dapat diubah setelah inisialisasi. <code>const double PI = 3.14;</code></li>\n        <li><strong>Multiple Declaration:</strong> <code>int p = 10, l = 5, luas;</code></li>\n        <li><strong>Array Declaration:</strong> <code>int skor[10];</code></li>\n      </ol>\n\n      <div class=\"note-box\">\n        <strong>Aturan Baku Penamaan Variabel (Identifier):</strong>\n        <ol>\n          <li>Boleh terdiri dari huruf (a-z, A-Z), angka (0-9), dan garis bawah (<em>underscore</em> <code>_</code>).</li>\n          <li><strong>TIDAK BOLEH diawali angka</strong> (Contoh tidak sah: <code>1nilai</code>, <code>2data</code>; Contoh sah: <code>nilai1</code>, <code>_total</code>).</li>\n          <li><strong>TIDAK BOLEH mengandung spasi</strong> atau simbol khusus (seperti <code>$</code>, <code>@</code>, <code>-</code>, <code>#</code>).</li>\n          <li><strong>Bersifat Case-Sensitive:</strong> Huruf besar dan kecil dibedakan (<code>Nilai</code> &ne; <code>nilai</code>).</li>\n          <li><strong>BUKAN Reserved Keyword:</strong> Tidak boleh menggunakan kata kunci bawaan C++ (seperti <code>int</code>, <code>for</code>, <code>while</code>, <code>if</code>, <code>return</code>, <code>class</code>).</li>\n        </ol>\n      </div>\n        "
   },
   {
-    id: "modul-4",
-    title: "4. Tipe Data, Inisialisasi, & Konstanta (const)",
-    content: `
-      <h4>Tipe Data Primitif & Deklarasi</h4>
-      <table class="materi-table">
-        <thead>
-          <tr>
-            <th>Tipe Data</th>
-            <th>Rentang / Deskripsi</th>
-            <th>Contoh Deklarasi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>bool</code></td>
-            <td><code>true</code> (1) atau <code>false</code> (0)</td>
-            <td><code>bool lulus = true;</code></td>
-          </tr>
-          <tr>
-            <td><code>char</code></td>
-            <td>Karakter tunggal (1 byte ASCII)</td>
-            <td><code>char nilai = 'A';</code></td>
-          </tr>
-          <tr>
-            <td><code>int</code></td>
-            <td>Bilangan bulat 32-bit ($-2 \times 10^9$ s.d. $2 \times 10^9$)</td>
-            <td><code>int umur = 17;</code></td>
-          </tr>
-          <tr>
-            <td><code>long long</code></td>
-            <td>Bilangan bulat 64-bit ($\approx \pm 9 \times 10^{18}$)</td>
-            <td><code>long long besar = 10000000000LL;</code></td>
-          </tr>
-          <tr>
-            <td><code>float</code></td>
-            <td>Pecahan presisi tunggal (7 digit presisi)</td>
-            <td><code>float suhu = 36.5f;</code></td>
-          </tr>
-          <tr>
-            <td><code>double</code></td>
-            <td>Pecahan presisi ganda (15 digit presisi)</td>
-            <td><code>double pi = 3.14159265;</code></td>
-          </tr>
-          <tr>
-            <td><code>string</code></td>
-            <td>Kumpulan karakter teks</td>
-            <td><code>string nama = "Budi";</code></td>
-          </tr>
-        </tbody>
-      </table>
-      <h4>Multiple Declaration & Konstanta</h4>
-      <pre><code>// Multiple Declaration: mendeklarasikan beberapa variabel sekaligus
-int panjang = 10, lebar = 5, tinggi = 2;
-
-// Konstanta (const): Nilainya mutlak dan TIDAK DAPAT DIUBAH lagi setelah diinisialisasi
-const double GRAVITASI = 9.8;
-// GRAVITASI = 10.0; // ERROR: assignment of read-only variable</code></pre>
-    `
+    "id": "modul-4",
+    "title": "4. Operator C++: Aritmatika, Penugasan, Relasional, Logika & Inc/Dec",
+    "content": "\n      <h4>D. Operator C++</h4>\n      <p>Operator adalah simbol khusus yang digunakan untuk melakukan operasi data:</p>\n\n      <h4>1. Operator Aritmatika</h4>\n      <ul>\n        <li><code>+</code> (Penjumlahan), <code>-</code> (Pengurangan), <code>*</code> (Perkalian)</li>\n        <li><code>/</code> (Pembagian): Pembagian integer menghasilkan bilangan bulat terpangkas (truncation), contoh: <code>7 / 2 = 3</code>.</li>\n        <li><code>%</code> (Modulo / Sisa Bagi): Menghasilkan sisa pembagian bilangan bulat, contoh: <code>17 % 5 = 2</code>.</li>\n      </ul>\n\n      <h4>2. Operator Penugasan (Assignment)</h4>\n      <p>Memberikan nilai pada variabel: <code>=</code>, <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>, <code>%=</code>.<br>\n      Contoh: <code>x += 5</code> ekuivalen dengan <code>x = x + 5</code>.</p>\n\n      <h4>3. Operator Perbandingan (Relasional)</h4>\n      <p>Menghasilkan nilai boolean (<code>true</code> atau <code>false</code>):<br>\n      <code>==</code> (Sama dengan), <code>!=</code> (Tidak sama dengan), <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>.</p>\n\n      <h4>4. Operator Logika</h4>\n      <ul>\n        <li><code>&amp;&amp;</code> (AND): Bernilai <code>true</code> jika kedua operand bernilai <code>true</code>.</li>\n        <li><code>||</code> (OR): Bernilai <code>true</code> jika minimal salah satu operand bernilai <code>true</code>.</li>\n        <li><code>!</code> (NOT): Membalikkan nilai logika (<code>!true = false</code>).</li>\n      </ul>\n\n      <h4>5. Operator Increment & Decrement</h4>\n      <ul>\n        <li><code>++</code> (Menambah nilai sebesar 1): Prefix (<code>++x</code> dievaluasi sebelum digunakan), Postfix (<code>x++</code> dievaluasi setelah nilai lama digunakan).</li>\n        <li><code>--</code> (Mengurangi nilai sebesar 1): Prefix (<code>--x</code>) dan Postfix (<code>x--</code>).</li>\n      </ul>\n        "
   },
   {
-    id: "modul-5",
-    title: "5. Operator & Jebakan Pembagian Bulat (Truncation)",
-    content: `
-      <h4>Operator Aritmatika & Compound Assignment</h4>
-      <ul>
-        <li><code>+</code>, <code>-</code>, <code>*</code>: Penjumlahan, pengurangan, perkalian.</li>
-        <li><code>/</code>: Pembagian.</li>
-        <li><code>%</code>: Modulus (sisa bagi bilangan bulat, contoh: <code>14 % 4 = 2</code>). Bilangan genap: <code>x % 2 == 0</code>, ganjil: <code>x % 2 != 0</code>.</li>
-        <li><strong>Compound Assignment:</strong> <code>x += 5</code> ekuivalen <code>x = x + 5</code>; <code>x *= 2</code> ekuivalen <code>x = x * 2</code>.</li>
-      </ul>
-      <div class="warn-box">
-        <strong>Jebakan Pembagian Bulat (Integer Truncation):</strong>
-        <br>Jika kedua operan bertipe <code>int</code>, maka hasil operasi <code>/</code> selalu membuang angka desimal di belakang koma:
-        <br><code>int a = 10, b = 4; cout &lt;&lt; (a / b); // Menghasilkan 2, BUKAN 2.5!</code>
-        <br>Agar menghasilkan 2.5, minimal salah satu harus dikonversi ke float/double: <code>(double)a / b</code>.
-      </div>
-      <h4>Pre-increment vs Post-increment</h4>
-      <ul>
-        <li><code>x++</code>: Nilai lama digunakan terlebih dahulu, baru kemudian nilai <code>x</code> bertambah 1.</li>
-        <li><code>++x</code>: Nilai <code>x</code> bertambah 1 terlebih dahulu, baru nilai baru tersebut digunakan.</li>
-      </ul>
-    `
+    "id": "modul-5",
+    "title": "5. Struktur Kendali Percabangan: IF, IF-ELSE, IF-ELSE-IF & SWITCH",
+    "content": "\n      <h4>E. Struktur Percabangan (Branching)</h4>\n      <p>Percabangan digunakan untuk menentukan alur eksekusi berdasarkan kondisi tertentu:</p>\n\n      <h4>1. Percabangan IF Tunggal & IF-ELSE</h4>\n      <p>Mengecek sisa hasil bagi untuk menentukan bilangan ganjil atau genap:</p>\n      <pre><code>if (a % 2 == 0) {\n    cout &lt;&lt; a &lt;&lt; \" adalah bilangan genap\";\n} else {\n    cout &lt;&lt; a &lt;&lt; \" adalah bilangan ganjil\";\n}</code></pre>\n\n      <h4>2. Percabangan IF ELSE IF Bertingkat</h4>\n      <p>Digunakan saat terdapat lebih dari dua kondisi bertingkat, contoh sistem grading nilai:</p>\n      <pre><code>if (nilai &gt;= 90) {\n    cout &lt;&lt; \"Grade A\";\n} else if (nilai &gt;= 80) {\n    cout &lt;&lt; \"Grade B\";\n} else if (nilai &gt;= 70) {\n    cout &lt;&lt; \"Grade C\";\n} else if (nilai &gt;= 60) {\n    cout &lt;&lt; \"Grade D\";\n} else {\n    cout &lt;&lt; \"Grade E\";\n}</code></pre>\n\n      <h4>3. Percabangan SWITCH-CASE</h4>\n      <p>Mencocokkan nilai variabel bertipe integer atau karakter terhadap konstanta nilai:</p>\n      <pre><code>switch (kodeBarang) {\n    case 'A':\n        cout &lt;&lt; \"Harga barang : Rp. 10.000,-\";\n        break;\n    case 'B':\n        cout &lt;&lt; \"Harga barang : Rp. 25.000,-\";\n        break;\n    case 'C':\n        cout &lt;&lt; \"Harga barang : Rp. 50.000,-\";\n        break;\n    default:\n        cout &lt;&lt; \"Kode barang tidak valid\";\n        break;\n}</code></pre>\n      <div class=\"note-box\">\n        <strong>Penting:</strong> Statement <code>break;</code> wajib disertakan pada setiap akhir case agar eksekusi keluar dari switch dan tidak terjadi <em>fallthrough</em>.\n      </div>\n        "
   },
   {
-    id: "modul-6",
-    title: "6. Jebakan Klasik: Assignment (=) vs Equality (==)",
-    content: `
-      <h4>Analisis Error Logika pada Kondisional</h4>
-      <p>Berdasarkan bab <em>Belajar dari Error</em> pada modul C++ SMA:</p>
-      <ul>
-        <li><code>=</code> adalah operator <strong>penugasan (assignment)</strong>, memasukkan nilai ke variabel.</li>
-        <li><code>==</code> adalah operator <strong>pembanding kesetaraan (equality)</strong>, menghasilkan nilai <code>true</code> atau <code>false</code>.</li>
-      </ul>
-      <pre><code>int nilai = 50;
-
-// KESALAHAN FATAL:
-if (nilai = 75) { 
-    // Pernyataan di atas BUKAN membandingkan nilai == 75,
-    // melainkan MENGUBAH isi nilai menjadi 75!
-    // Karena 75 adalah integer non-nol, ekspresi ini SELALU BERNILAI TRUE!
-    cout &lt;&lt; "Pasti Tercetak!";
-}</code></pre>
-    `
+    "id": "modul-6",
+    "title": "6. Struktur Kendali Perulangan: FOR, WHILE, & DO-WHILE",
+    "content": "\n      <h4>F. Perulangan (Looping)</h4>\n      <p>Digunakan untuk mengulang suatu blok kode program sampai kondisi tertentu terpenuhi:</p>\n\n      <h4>1. Perulangan FOR</h4>\n      <p>Digunakan saat jumlah iterasi sudah diketahui secara pasti sebelumnya:</p>\n      <pre><code>for (int i = 1; i &lt;= 5; i++) {\n    cout &lt;&lt; \"Iterasi ke-\" &lt;&lt; i &lt;&lt; endl;\n}</code></pre>\n\n      <h4>2. Perulangan WHILE</h4>\n      <p>Kondisi diuji di <strong>awal</strong>. Blok kode hanya dijalankan selama kondisi bernilai <code>true</code>:</p>\n      <pre><code>int naufal = 0;\nwhile (naufal &lt; 5) {\n    cout &lt;&lt; \"Nilai naufal: \" &lt;&lt; naufal &lt;&lt; endl;\n    naufal++;\n}</code></pre>\n\n      <h4>3. Perulangan DO-WHILE</h4>\n      <p>Kondisi diuji di <strong>akhir</strong>. Blok kode <strong>pasti dieksekusi minimal satu kali</strong> meskipun kondisinya sejak awal bernilai false:</p>\n      <pre><code>int syafa = 0;\ndo {\n    cout &lt;&lt; \"Nilai syafa: \" &lt;&lt; syafa &lt;&lt; endl;\n    syafa++;\n} while (syafa &lt; 5);</code></pre>\n        "
   },
   {
-    id: "modul-7",
-    title: "7. Logika Boolean & Tabel Kebenaran (AND, OR, NOT)",
-    content: `
-      <h4>Evaluasi Ekspresi Logika Proposisi OSN</h4>
-      <p>Sesuai <em>Modul Persiapan OSN Informatika</em>, operasi logika menghubungkan kondisi-kondisi:</p>
-      <ul>
-        <li><code>&amp;&amp;</code> (AND): Bernilai <code>true</code> HANYA JIKA KEDUA KONDISI bernilai true.</li>
-        <li><code>||</code> (OR): Bernilai <code>true</code> JIKA SALAH SATU atau KEDUA KONDISI bernilai true.</li>
-        <li><code>!</code> (NOT): Membalikkan nilai logika (<code>!true = false</code>, <code>!false = true</code>).</li>
-      </ul>
-      <table class="materi-table">
-        <thead>
-          <tr>
-            <th>P</th>
-            <th>Q</th>
-            <th>P &amp;&amp; Q</th>
-            <th>P || Q</th>
-            <th>!P</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>True (1)</td>
-            <td>True (1)</td>
-            <td>True (1)</td>
-            <td>True (1)</td>
-            <td>False (0)</td>
-          </tr>
-          <tr>
-            <td>True (1)</td>
-            <td>False (0)</td>
-            <td>False (0)</td>
-            <td>True (1)</td>
-            <td>False (0)</td>
-          </tr>
-          <tr>
-            <td>False (0)</td>
-            <td>True (1)</td>
-            <td>False (0)</td>
-            <td>True (1)</td>
-            <td>True (1)</td>
-          </tr>
-          <tr>
-            <td>False (0)</td>
-            <td>False (0)</td>
-            <td>False (0)</td>
-            <td>False (0)</td>
-            <td>True (1)</td>
-          </tr>
-        </tbody>
-      </table>
-    `
+    "id": "modul-7",
+    "title": "7. Fungsi C++: Standar vs Pengguna, Parameter & Nilai Balik",
+    "content": "\n      <h4>G. Fungsi (Functions)</h4>\n      <p>Fungsi adalah blok kode modular yang dapat dipanggil berulang kali untuk menjalankan tugas tertentu.</p>\n\n      <h4>1. Klasifikasi Fungsi</h4>\n      <ul>\n        <li><strong>Fungsi Standar (Built-in):</strong> Fungsi pustaka bawaan C++, seperti <code>sqrt()</code>, <code>cin</code>, <code>cout</code>.</li>\n        <li><strong>Fungsi Pengguna (User-defined):</strong> Fungsi yang didefinisikan sendiri oleh pemrogram.</li>\n      </ul>\n\n      <h4>2. Parameter vs Argumen</h4>\n      <ul>\n        <li><strong>Parameter:</strong> Variabel penampung yang didefinisikan pada deklarasi header fungsi.</li>\n        <li><strong>Argumen:</strong> Nilai aktual yang dikirimkan saat fungsi dipanggil.</li>\n      </ul>\n\n      <h4>3. Fungsi dengan Nilai Pengembalian (return)</h4>\n      <pre><code>int perkalian(int a, int b) {\n    return a * b;\n}\n\nint main() {\n    int hasil = perkalian(4, 5); // 4 dan 5 adalah argumen\n    cout &lt;&lt; \"Hasil: \" &lt;&lt; hasil;  // Menampilkan 20\n    return 0;\n}</code></pre>\n\n      <h4>4. Fungsi Tanpa Nilai Balik (void)</h4>\n      <pre><code>void cariLuasSegitiga(int alas, int tinggi) {\n    int luas = (alas * tinggi) / 2;\n    cout &lt;&lt; \"Luas Segitiga adalah: \" &lt;&lt; luas &lt;&lt; endl;\n}</code></pre>\n        "
   },
   {
-    id: "modul-8",
-    title: "8. Perulangan: For, While, & Do-While",
-    content: `
-      <h4>Perbandingan Tiga Struktur Perulangan</h4>
-      <ul>
-        <li><strong>FOR:</strong> Digunakan saat jumlah perulangan sudah diketahui dengan pasti sebelumnya.
-          <br><code>for(int i = 0; i &lt; 5; i++) { ... }</code>
-        </li>
-        <li><strong>WHILE:</strong> Digunakan saat jumlah perulangan belum pasti, pengujian dilakukan di AWAL sebelum blok dijalankan. Jika kondisi awal false, tubuh loop tidak pernah dieksekusi sama sekali.
-          <br><code>while(n &gt; 0) { n /= 2; }</code>
-        </li>
-        <li><strong>DO-WHILE:</strong> Pengujian kondisi dilakukan di AKHIR. Akibatnya tubuh perulangan PASTI DIJALANKAN MINIMAL SATU KALI.
-          <br><code>do { a += 2; } while(a &lt; 10);</code>
-        </li>
-      </ul>
-      <div class="warn-box">
-        <strong>Titik Koma Tersembunyi:</strong> <code>for(int i=0; i&lt;5; i++); { cout &lt;&lt; i; }</code>
-        <br>Titik koma setelah for membuat loop kosong. Blok kurung kurawal hanya dieksekusi 1 kali setelah perulangan selesai!
-      </div>
-    `
+    "id": "modul-8",
+    "title": "8. Fungsi Rekursif C++: Kasus Basis & Faktorial",
+    "content": "\n      <h4>G.5 Fungsi Rekursif</h4>\n      <p>Fungsi rekursif adalah fungsi yang <strong>memanggil dirinya sendiri</strong> sampai suatu kondisi henti (basis kasus) terpenuhi.</p>\n\n      <h4>Komponen Wajib Fungsi Rekursif:</h4>\n      <ul>\n        <li><strong>Kondisi Basis (Base Case):</strong> Kondisi penghenti pemanggilan diri. Jika tidak ada basis, program akan mengalami <em>infinite loop</em> dan <em>Stack Overflow</em>.</li>\n        <li><strong>Langkah Rekursif (Recursive Step):</strong> Pemanggilan fungsi kembali dengan argumen yang semakin mendekati basis kasus.</li>\n      </ul>\n\n      <h4>Implementasi Faktorial Bilangan ($n!$)</h4>\n      <p>Faktorial didefinisikan sebagai: $n! = n \\times (n-1)!$ dengan basis $0! = 1$ dan $1! = 1$.</p>\n      <pre><code>int factorial(int n) {\n    if (n &lt;= 1) { // Kasus Basis\n        return 1;\n    }\n    return n * factorial(n - 1); // Langkah Rekursif\n}\n\nint main() {\n    cout &lt;&lt; factorial(5); // Output: 120\n    return 0;\n}</code></pre>\n      <p><strong>Alur Eksekusi (Call Stack):</strong><br>\n      <code>factorial(5)</code> = $5 \\times factorial(4)$<br>\n      <code>factorial(4)</code> = $4 \\times factorial(3)$<br>\n      <code>factorial(3)</code> = $3 \\times factorial(2)$<br>\n      <code>factorial(2)</code> = $2 \\times factorial(1)$<br>\n      <code>factorial(1)</code> = $1$ (Basis tercapai)<br>\n      Hasil dikembalikan ke atas: $2 \\times 1 = 2 \\rightarrow 3 \\times 2 = 6 \\rightarrow 4 \\times 6 = 24 \\rightarrow 5 \\times 24 = 120$.</p>\n        "
   },
   {
-    id: "modul-9",
-    title: "9. Fungsi: Parameter Formal vs Argumen Aktual",
-    content: `
-      <h4>Konsep Pemanggilan Fungsi</h4>
-      <p>Sesuai <em>Modul Bab I OSN Informatika</em>:</p>
-      <ul>
-        <li><strong>Parameter Formal:</strong> Variabel penampung yang didefinisikan pada deklarasi fungsi (contoh: <code>int a, int b</code> pada <code>int tambah(int a, int b)</code>).</li>
-        <li><strong>Argumen Aktual:</strong> Nilai nyata atau variabel yang dikirimkan saat fungsi dipanggil di dalam <code>main()</code> (contoh: <code>tambah(10, 20)</code>).</li>
-      </ul>
-      <h4>Pass by Value vs Pass by Reference (&amp;)</h4>
-      <pre><code>void coba(int val, int &amp;ref) {
-    val += 10; // Pass by Value: hanya salinan lokal yang berubah
-    ref += 10; // Pass by Reference (&amp;): variabel pemanggil di main ikut berubah!
-}</code></pre>
-    `
+    "id": "modul-9",
+    "title": "9. Logika Proposisi & Tabel Kebenaran Gerbang Logika",
+    "content": "\n      <h4>BAB 1 GERBANG LOGIKA</h4>\n      <p>Logika digital dan boolean adalah materi inti OSN Informatika untuk menganalisis kebenaran pernyataan:</p>\n\n      <h4>Tabel Kebenaran 7 Gerbang Logika Utama</h4>\n      <table style=\"width:100%; border-collapse:collapse; margin:12px 0;\">\n        <thead>\n          <tr style=\"background:var(--accent-glow); border-bottom:2px solid var(--border);\">\n            <th style=\"padding:6px; border:1px solid var(--border);\">A</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">B</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">AND</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">OR</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">XOR</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">NAND</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">NOR</th>\n            <th style=\"padding:6px; border:1px solid var(--border);\">XNOR</th>\n          </tr>\n        </thead>\n        <tbody>\n          <tr><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td></tr>\n          <tr><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td></tr>\n          <tr><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td></tr>\n          <tr><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">1</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">0</td><td style=\"text-align:center;\">1</td></tr>\n        </tbody>\n      </table>\n\n      <h4>Karakteristik Khusus Gerbang Logika:</h4>\n      <ul>\n        <li><strong>XOR (Exclusive OR):</strong> Bernilai 1 jika kedua input <em>berbeda</em>.</li>\n        <li><strong>XNOR:</strong> Kebalikan XOR, bernilai 1 jika kedua input <em>sama</em>.</li>\n        <li><strong>NAND &amp; NOR:</strong> Merupakan <em>universal gates</em> karena dapat membentuk semua fungsi logika lainnya.</li>\n      </ul>\n        "
   },
   {
-    id: "modul-10",
-    title: "10. Operator Bitwise & Rekursi Lanjut OSNK",
-    content: `
-      <h4>Bitwise & Trik Biner</h4>
-      <ul>
-        <li><code>x &amp; 1</code>: Cek ganjil/genap (1 = ganjil, 0 = genap).</li>
-        <li><code>x &lt;&lt; k</code>: Kalikan dengan $2^k$ (contoh: <code>5 &lt;&lt; 2 = 20</code>).</li>
-        <li><code>x &gt;&gt; k</code>: Bagi dengan $2^k$ (contoh: <code>16 &gt;&gt; 2 = 4</code>).</li>
-        <li><code>x ^ x = 0</code> dan <code>x ^ 0 = x</code>: Sifat XOR untuk menemukan elemen tunggal tak berpasangan.</li>
-      </ul>
-      <h4>Fungsi Rekursif</h4>
-      <p>Fungsi yang memanggil dirinya sendiri. Wajib memiliki <strong>Base Case</strong> agar tidak terjadi <em>Stack Overflow</em>. Selalu buat tabel pelacakan nilai (trace table) saat mengerjakan soal rekursi OSNK.</p>
-    `
+    "id": "modul-10",
+    "title": "10. Kombinatorika OSN: Kombinasi (nCr) & Permutasi (nPr)",
+    "content": "\n      <h4>PERTEMUAN KE-2 &amp; KE-3: KOMBINATORIKA</h4>\n\n      <h4>1. Kombinasi (nCr)</h4>\n      <p>Kombinasi adalah cara memilih $r$ objek dari $n$ objek yang ada <strong>tanpa memperhatikan urutan</strong>.</p>\n      <p><strong>Rumus Kombinasi:</strong></p>\n      <div class=\"note-box\" style=\"text-align:center; font-size:1.1rem;\">\n        $$nCr = \\frac{n!}{(n - r)! \\times r!}$$\n      </div>\n      <p><strong>Contoh Modul:</strong> Memilih 3 anak dari 5 anak (A, B, C, D, E) untuk tim lomba. Karena susunan ABC sama dengan CBA, maka:<br>\n      $$5C3 = \\frac{5!}{(5-3)! \\times 3!} = \\frac{5 \\times 4 \\times 3 \\times 2 \\times 1}{(2 \\times 1) \\times (3 \\times 2 \\times 1)} = 10 \\text{ susunan tim berbeda.}$$</p>\n\n      <h4>2. Permutasi (nPr)</h4>\n      <p>Permutasi adalah cara memilih dan menyusun $r$ objek dari $n$ objek dengan <strong>memperhatikan urutan posisi/jabatan</strong>.</p>\n      <div class=\"note-box\" style=\"text-align:center; font-size:1.1rem;\">\n        $$nPr = \\frac{n!}{(n - r)!}$$\n      </div>\n      <p><strong>Contoh Modul:</strong> Mengatur 3 buku dari 5 buku berbeda di rak:<br>\n      $$5P3 = \\frac{5!}{(5-3)!} = \\frac{120}{2} = 60 \\text{ cara.}$$</p>\n\n      <h4>3. Permutasi Siklis (Melingkar)</h4>\n      <p>Penataan objek pada posisi melingkar (contoh meja bundar):<br>\n      $$P_{\\text{siklis}} = (n - 1)!$$<br>\n      Untuk 5 siswa di sekitar meja bundar: $(5 - 1)! = 4! = 24$ cara.</p>\n        "
+  },
+  {
+    "id": "modul-11",
+    "title": "11. Teori Himpunan & Prinsip Inklusi-Eksklusi",
+    "content": "\n      <h4>PERTEMUAN KE-4: HIMPUNAN</h4>\n      <p>Himpunan digunakan untuk mengelompokkan objek dengan karakteristik yang sama ke dalam satu entitas tunggal.</p>\n\n      <h4>Prinsip Inklusi-Eksklusi (PIE)</h4>\n      <p>Untuk 3 himpunan $A$, $B$, dan $C$:</p>\n      <div class=\"note-box\" style=\"font-size:0.95rem;\">\n        $$|A \\cup B \\cup C| = |A| + |B| + |C| - (|A \\cap B| + |B \\cap C| + |A \\cap C|) + |A \\cap B \\cap C|$$\n      </div>\n\n      <h4>Wilayah Eksklusif pada Diagram Venn 3 Himpunan:</h4>\n      <ul>\n        <li><strong>Hanya menyukai ketiga-tiganya:</strong> $|A \\cap B \\cap C|$</li>\n        <li><strong>Hanya menyukai A dan B saja (tanpa C):</strong> $|A \\cap B| - |A \\cap B \\cap C|$</li>\n        <li><strong>Hanya menyukai A saja:</strong> $|A| - (\\text{Hanya } AB + \\text{Hanya } AC + \\text{Ketiganya})$</li>\n        <li><strong>Tidak menyukai ketiganya:</strong> Semesta Total $S - |A \\cup B \\cup C|$</li>\n      </ul>\n\n      <h4>Model Pemilihan & Voting dengan Pembagian Suara Proporsional</h4>\n      <p>Jika seorang pemilih memilih 1 kandidat, nilai bulat 3 diberikan penuh. Jika memilih $k$ kandidat bersamaan, suara bulat 3 dibagi rata menjadi $\\frac{3}{k}$ poin untuk masing-masing kandidat.</p>\n        "
   }
 ];
 

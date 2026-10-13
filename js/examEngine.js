@@ -25,6 +25,35 @@ class ExamEngine {
     this.wrongQuestions = [];
     this.round2CurrentIndex = 0;
     this.round2Answers = {};
+    this.round2LockedQuestions = {}; // { questionId: { locked: true, isCorrect: boolean } }
+    this.memeWrongImages = [
+      "salah/(5) Instagram.jpg",
+      "salah/1005780529266219739.jpg",
+      "salah/1027242996277772888.jpg",
+      "salah/1048142513289258599.jpg",
+      "salah/1091419290962551460.jpg",
+      "salah/768215648983680129.jpg",
+      "salah/848717492306299775.jpg",
+      "salah/858639485250470688.jpg",
+      "salah/911486412133807642.jpg",
+      "salah/934989572654281942.jpg",
+      "salah/983192162552503531.jpg",
+      "salah/ape tu wooooiiii.jpg",
+      "salah/cat (1).jpg",
+      "salah/Cat Laugh Meme Reaction (High Quality).jpg",
+      "salah/denis pamer ipong.jpg",
+      "salah/How to Think Critically — Train Your Brain to Make Better Decisions _ Audiobook.jpg",
+      "salah/HUH.gif",
+      "salah/jmk 48.jpg",
+      "salah/KAPANN YHH.jpg",
+      "salah/smol silly cat (@Catsillyness) on X.jpg",
+      "salah/wallahu a'lam.jpg",
+      "salah/저코 위덛오– jeoko wideodo.jpg",
+      "salah/🐢.jpg"
+    ];
+    this.memeAudio = null;
+    this.memeCountdownTimer = null;
+    this.isMemeActive = false;
 
     // Skor
     this.scoreRound1 = 0;
@@ -63,6 +92,7 @@ class ExamEngine {
       wrongQuestions: this.wrongQuestions,
       round2CurrentIndex: this.round2CurrentIndex,
       round2Answers: this.round2Answers,
+      round2LockedQuestions: this.round2LockedQuestions || {},
       scoreRound1: this.scoreRound1,
       scoreRound2: this.scoreRound2,
       totalScore: this.totalScore,
@@ -108,6 +138,7 @@ class ExamEngine {
       this.round1Doubt = saved.round1Doubt || {};
       this.wrongQuestions = saved.wrongQuestions || [];
       this.round2Answers = saved.round2Answers || {};
+      this.round2LockedQuestions = saved.round2LockedQuestions || {};
       this.scoreRound1 = saved.scoreRound1 || 0;
       this.scoreRound2 = saved.scoreRound2 || 0;
       this.totalScore = saved.totalScore || 0;
@@ -720,6 +751,7 @@ class ExamEngine {
     if (!isRestore) {
       this.round2CurrentIndex = 0;
       this.round2Answers = {};
+      this.round2LockedQuestions = {};
     }
     this.saveState();
     this.showScreen("screen-round2-exam");
@@ -739,10 +771,64 @@ class ExamEngine {
       btn.id = `r2-grid-btn-${index}`;
       btn.innerText = index + 1;
       btn.addEventListener("click", () => {
+        if (this.isMemeActive) return;
         this.loadRound2Question(index);
       });
       grid.appendChild(btn);
     });
+  }
+
+  showMemeWrongPopup(onFinish) {
+    this.isMemeActive = true;
+    const modal = document.getElementById("meme-wrong-modal");
+    const imgEl = document.getElementById("meme-modal-img");
+    const countEl = document.getElementById("meme-countdown-num");
+
+    // Ambil gambar acak dari daftar meme di folder salah/
+    const randomIndex = Math.floor(Math.random() * this.memeWrongImages.length);
+    const chosenImage = this.memeWrongImages[randomIndex];
+    if (imgEl) {
+      imgEl.src = encodeURI(chosenImage);
+    }
+
+    // Mainkan audio tawa meme
+    try {
+      if (!this.memeAudio) {
+        this.memeAudio = new Audio("salah/cartoon_laugh.mp3");
+      }
+      this.memeAudio.currentTime = 0;
+      this.memeAudio.play().catch(e => {
+        console.warn("Audio autoplay blocked or user gesture required:", e);
+      });
+    } catch (e) {
+      console.warn("Audio play error:", e);
+    }
+
+    let secondsLeft = 3;
+    if (countEl) countEl.innerText = secondsLeft;
+    if (modal) modal.classList.add("active");
+
+    if (this.memeCountdownTimer) clearInterval(this.memeCountdownTimer);
+    this.memeCountdownTimer = setInterval(() => {
+      secondsLeft--;
+      if (countEl) countEl.innerText = secondsLeft;
+
+      if (secondsLeft <= 0) {
+        clearInterval(this.memeCountdownTimer);
+        this.memeCountdownTimer = null;
+        if (modal) modal.classList.remove("active");
+
+        if (this.memeAudio) {
+          try {
+            this.memeAudio.pause();
+            this.memeAudio.currentTime = 0;
+          } catch (e) {}
+        }
+
+        this.isMemeActive = false;
+        if (onFinish) onFinish();
+      }
+    }, 1000);
   }
 
   loadRound2Question(index) {
@@ -769,13 +855,41 @@ class ExamEngine {
 
     const optionsList = document.getElementById("r2-q-options-list");
     optionsList.innerHTML = "";
+
+    // Cek apakah soal ini sudah terkunci permanen
+    const lockInfo = this.round2LockedQuestions ? this.round2LockedQuestions[q.id] : null;
+    const isLocked = !!lockInfo;
+
+    // Jika sudah terkunci, tampilkan banner keterangan
+    if (isLocked) {
+      const banner = document.createElement("div");
+      if (!lockInfo.isCorrect) {
+        banner.className = "r2-locked-banner wrong";
+        banner.innerHTML = "<span>❌</span> <span>Jawaban Anda salah! <strong>Soal remedial ini telah dikunci permanen</strong> dan tidak bisa dibenarkan lagi.</span>";
+      } else {
+        banner.className = "r2-locked-banner correct";
+        banner.innerHTML = "<span>✓</span> <span>Jawaban remedial Anda benar! <strong>Soal ini telah dikunci</strong>.</span>";
+      }
+      optionsList.appendChild(banner);
+    }
+
     const letters = ["A", "B", "C", "D", "E"];
 
     q.options.forEach((optText, optIdx) => {
       const optBtn = document.createElement("div");
       optBtn.className = "option-item";
-      if (this.round2Answers[q.id] === optIdx) {
+
+      const isSelected = (this.round2Answers[q.id] === optIdx);
+      if (isSelected) {
         optBtn.classList.add("selected");
+        if (isLocked) {
+          if (!lockInfo.isCorrect) optBtn.classList.add("locked-wrong-selected");
+          else optBtn.classList.add("locked-correct-selected");
+        }
+      }
+
+      if (isLocked) {
+        optBtn.classList.add("locked-disabled");
       }
 
       optBtn.innerHTML = `
@@ -783,11 +897,14 @@ class ExamEngine {
         <span class="option-text">${optText}</span>
       `;
 
-      optBtn.addEventListener("click", () => {
-        this.round2Answers[q.id] = optIdx;
-        this.saveState();
-        this.loadRound2Question(this.round2CurrentIndex);
-      });
+      if (!isLocked) {
+        optBtn.addEventListener("click", () => {
+          this.round2Answers[q.id] = optIdx;
+          this.saveState();
+          this.loadRound2Question(this.round2CurrentIndex);
+        });
+      }
+
       optionsList.appendChild(optBtn);
     });
 
@@ -830,6 +947,24 @@ class ExamEngine {
 
   handleRound2QuestionTimeOut() {
     this.anticheat.showToast("Waktu 3 menit untuk soal remedial ini telah habis!");
+    const currentQ = this.wrongQuestions[this.round2CurrentIndex];
+    const isLocked = this.round2LockedQuestions && this.round2LockedQuestions[currentQ.id];
+
+    if (!isLocked) {
+      this.round2LockedQuestions[currentQ.id] = { locked: true, isCorrect: false };
+      this.saveState();
+      this.updateRound2GridStatus();
+
+      this.showMemeWrongPopup(() => {
+        if (this.round2CurrentIndex < this.wrongQuestions.length - 1) {
+          this.loadRound2Question(this.round2CurrentIndex + 1);
+        } else {
+          this.executeFinishRound2();
+        }
+      });
+      return;
+    }
+
     if (this.round2CurrentIndex < this.wrongQuestions.length - 1) {
       this.loadRound2Question(this.round2CurrentIndex + 1);
     } else {
@@ -838,15 +973,44 @@ class ExamEngine {
   }
 
   prevRound2Question() {
+    if (this.isMemeActive) return;
     if (this.round2CurrentIndex > 0) {
       this.loadRound2Question(this.round2CurrentIndex - 1);
     }
   }
 
   nextRound2Question() {
-    if (this.round2CurrentIndex < this.wrongQuestions.length - 1) {
-      this.loadRound2Question(this.round2CurrentIndex + 1);
+    if (this.isMemeActive) return;
+    if (this.round2CurrentIndex >= this.wrongQuestions.length - 1) return;
+
+    const currentQ = this.wrongQuestions[this.round2CurrentIndex];
+    const isLocked = this.round2LockedQuestions && this.round2LockedQuestions[currentQ.id];
+
+    // Jika soal saat ini belum pernah dikunci, periksa jawabannya saat tombol Next ditekan
+    if (!isLocked) {
+      const userAns = this.round2Answers[currentQ.id];
+      const isCorrect = (userAns !== undefined && userAns === currentQ.correct);
+
+      if (!isCorrect) {
+        // SALAH: Kunci permanen, tidak bisa dibenarkan lagi!
+        this.round2LockedQuestions[currentQ.id] = { locked: true, isCorrect: false };
+        this.saveState();
+        this.updateRound2GridStatus();
+
+        // Tampilkan meme acak selama 3 detik + audio tawa meme
+        this.showMemeWrongPopup(() => {
+          this.loadRound2Question(this.round2CurrentIndex + 1);
+        });
+        return;
+      } else {
+        // BENAR: Kunci sebagai benar
+        this.round2LockedQuestions[currentQ.id] = { locked: true, isCorrect: true };
+        this.saveState();
+        this.updateRound2GridStatus();
+      }
     }
+
+    this.loadRound2Question(this.round2CurrentIndex + 1);
   }
 
   updateRound2GridStatus() {
@@ -856,32 +1020,67 @@ class ExamEngine {
 
       btn.className = "grid-q-btn";
       if (idx === this.round2CurrentIndex) btn.classList.add("current");
-      if (this.round2Answers[q.id] !== undefined) btn.classList.add("answered");
+
+      const lockInfo = this.round2LockedQuestions ? this.round2LockedQuestions[q.id] : null;
+      if (lockInfo) {
+        if (!lockInfo.isCorrect) btn.classList.add("locked-wrong");
+        else btn.classList.add("locked-correct");
+      } else if (this.round2Answers[q.id] !== undefined) {
+        btn.classList.add("answered");
+      }
     });
   }
 
   confirmFinishRound2() {
+    if (this.isMemeActive) return;
+
+    // Cek soal terakhir jika belum terkunci
+    const lastQ = this.wrongQuestions[this.round2CurrentIndex];
+    const isLastLocked = this.round2LockedQuestions && this.round2LockedQuestions[lastQ.id];
+
+    if (!isLastLocked) {
+      const userAns = this.round2Answers[lastQ.id];
+      const isCorrect = (userAns !== undefined && userAns === lastQ.correct);
+
+      if (!isCorrect) {
+        this.round2LockedQuestions[lastQ.id] = { locked: true, isCorrect: false };
+        this.saveState();
+        this.updateRound2GridStatus();
+
+        this.showMemeWrongPopup(() => {
+          this.executeFinishRound2();
+        });
+        return;
+      } else {
+        this.round2LockedQuestions[lastQ.id] = { locked: true, isCorrect: true };
+        this.saveState();
+        this.updateRound2GridStatus();
+      }
+    }
+
     this.showConfirm(
       "Selesaikan Ujian?",
       "Yakin ingin menyelesaikan Kesempatan Kedua dan melihat Nilai Akhir & Leaderboard?",
       "🎯",
-      () => {
-        if (this.questionInterval) clearInterval(this.questionInterval);
-
-        let correctR2 = 0;
-        this.wrongQuestions.forEach(q => {
-          if (this.round2Answers[q.id] === q.correct) {
-            correctR2++;
-          }
-        });
-
-        this.scoreRound2 = correctR2 * APP_CONFIG.ROUND_2_POINT;
-        this.totalScore = Math.min(100, Math.round((this.scoreRound1 + this.scoreRound2) * 10) / 10);
-        this.completed = true;
-
-        this.finishExam();
-      }
+      () => this.executeFinishRound2()
     );
+  }
+
+  executeFinishRound2() {
+    if (this.questionInterval) clearInterval(this.questionInterval);
+
+    let correctR2 = 0;
+    this.wrongQuestions.forEach(q => {
+      if (this.round2Answers[q.id] === q.correct) {
+        correctR2++;
+      }
+    });
+
+    this.scoreRound2 = correctR2 * APP_CONFIG.ROUND_2_POINT;
+    this.totalScore = Math.min(100, Math.round((this.scoreRound1 + this.scoreRound2) * 10) / 10);
+    this.completed = true;
+
+    this.finishExam();
   }
 
   // --- FASE 5: HASIL AKHIR & LEADERBOARD ---

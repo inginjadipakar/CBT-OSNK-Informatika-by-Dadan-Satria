@@ -54,6 +54,7 @@ for q in questions:
         else:
             run_res = subprocess.run(
                 [exe_file],
+                input="8\n",
                 capture_output=True,
                 text=True,
                 timeout=3
