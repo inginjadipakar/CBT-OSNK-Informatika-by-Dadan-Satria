@@ -338,7 +338,7 @@ class ExamEngineLes {
             data-qid="${qId}" 
             data-blank="${b.globalIndex}" 
             value="${this._escapeHtml(val)}" 
-            placeholder="..."
+            placeholder="angka"
             autocomplete="off"
             spellcheck="false"
           />
@@ -894,6 +894,8 @@ class ExamEngineLes {
             { left: "$", right: "$", display: false },
             { left: "\\(", right: "\\)", display: false }
           ],
+          ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "option", "input"],
+          ignoredClasses: ["step-blank-input"],
           throwOnError: false
         });
       } catch (e) {
